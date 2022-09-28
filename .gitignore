@@ -1,0 +1,6 @@
+
+.DS_Store
+
+*.lock
+
+mobile/package-lock.json
