@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const bcrypt = require('bcryptjs');
-const { MAX, ACCOUNT_TYPES } = require('../../constant');
+const { MAX, ACCOUNT_TYPES } = require('../constant');
 
 const accountTypeEnum = (function () {
   let list = [];

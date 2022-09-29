@@ -13,6 +13,8 @@ const { MAX } = require('./src/constant');
 const corsConfig = require('./src/configs/cors.config');
 const accountApi = require('./src/apis/account.api');
 const organizationApi = require('./src/apis/organization.api');
+const vacancyApi = require('./src/apis/vacancy.api');
+const applyApi = require('./src/apis/apply.api');
 
 // ================== set port ==================
 const app = express();
@@ -66,6 +68,8 @@ app.listen(PORT, () => {
 const BASE_URL = '';
 app.use(`${BASE_URL}/account`, accountApi);
 app.use(`${BASE_URL}/organization`, organizationApi);
+app.use(`${BASE_URL}/vacancy`, vacancyApi);
+app.use(`${BASE_URL}/apply`, applyApi);
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/src/build', 'index.html'));

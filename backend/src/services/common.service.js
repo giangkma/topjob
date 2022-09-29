@@ -1,6 +1,6 @@
 const { cloudinary } = require('../configs/cloudinary.config');
 const { MAX } = require('../constant');
-const VerifyCodeModel = require('../models/account.model/verifyCode.model');
+const VerifyCodeModel = require('../models/verifyCode.model');
 
 exports.uploadImage = async (imgSrc, folderName = '', config = {}) => {
   try {

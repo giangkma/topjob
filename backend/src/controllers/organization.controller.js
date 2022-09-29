@@ -3,7 +3,7 @@ const {
   findOrganizationByName,
   findOrganizationById,
 } = require('../services/organization.service');
-const { throwError } = require('../helper');
+const { throwError, checkOrganization } = require('../helper');
 
 exports.createOranization = async (req, res) => {
   try {
@@ -28,22 +28,6 @@ exports.createOranization = async (req, res) => {
   } catch (error) {
     throwError(res, error);
   }
-};
-
-const checkOrganization = async (id, user) => {
-  const organization = await findOrganizationById(id);
-  if (!organization) {
-    throw new Error(
-      'Organization is not exist. Please check your organization id',
-    );
-  }
-  const isExist = user.organizations.find(
-    org => org.toString() === organization._id.toString(),
-  );
-  if (!isExist) {
-    throw new Error('You do not have permission to update this organization');
-  }
-  return organization;
 };
 
 exports.updateOrganization = async (req, res) => {

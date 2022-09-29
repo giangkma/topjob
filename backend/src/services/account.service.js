@@ -1,7 +1,7 @@
 const { ACCOUNT_TYPES, MAX } = require('../constant');
 const { hashPassword } = require('../helper');
-const AccountModel = require('../models/account.model/account.model');
-const UserModel = require('../models/account.model/user.model');
+const AccountModel = require('../models/account.model');
+const UserModel = require('../models/user.model');
 const { uploadImage } = require('./common.service');
 
 exports.isExistAccount = email => {

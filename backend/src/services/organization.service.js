@@ -1,25 +1,25 @@
-const OrganizationModel = require('../models/account.model/organization.model');
+const Model = require('../models/organization.model');
 
 exports.isExistOrganization = name => {
-  return OrganizationModel.exists({ name });
+  return Model.exists({ name });
 };
 
 exports.findOrganizationByName = name => {
-  return OrganizationModel.findOne({ name });
+  return Model.findOne({ name });
 };
 
 exports.findOrganizationById = id => {
-  return OrganizationModel.findById(id);
+  return Model.findById(id);
 };
 
 exports.removeOrganization = id => {
-  return OrganizationModel.findByIdAndDelete(id);
+  return Model.findByIdAndDelete(id);
 };
 
 exports.createOrganization = async data => {
-  const isExist = await OrganizationModel.exists({ name: data.name });
+  const isExist = await Model.exists({ name: data.name });
   if (isExist) {
     throw new Error('Organization is exist');
   }
-  return OrganizationModel.create(data);
+  return Model.create(data);
 };

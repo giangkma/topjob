@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { MAX } = require('../constant');
+const { findOrganizationById } = require('../services/organization.service');
 
 // @fn: create an username for user by email, account id
 // @ex: dyno2000@email.com, id: 127391212 => dyno200012739
@@ -32,4 +33,20 @@ exports.throwError = (res, error) => {
     error: true,
     message: error.message,
   });
+};
+
+exports.checkOrganization = async (id, user) => {
+  const organization = await findOrganizationById(id);
+  if (!organization) {
+    throw new Error(
+      'Organization is not exist. Please check your organization id',
+    );
+  }
+  const isExist = user.organizations.find(
+    org => org.toString() === organization._id.toString(),
+  );
+  if (!isExist) {
+    throw new Error('You do not have permission !');
+  }
+  return organization;
 };

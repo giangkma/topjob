@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { MAX } = require('../../constant');
+const { MAX } = require('../constant');
 const Schema = mongoose.Schema;
 
 const verifyCodeSchema = new Schema({

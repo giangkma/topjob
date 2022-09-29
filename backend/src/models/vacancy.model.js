@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { TYPES_VACANCY } = require('../../constant');
+const { TYPES_VACANCY, STATUS_VACANCY } = require('../constant');
 const Schema = mongoose.Schema;
 
 const vacancySchema = new Schema({
@@ -34,12 +34,17 @@ const vacancySchema = new Schema({
     required: true,
     ref: 'organization',
   },
+  status: {
+    type: String,
+    default: STATUS_VACANCY.ACTIVE,
+    enum: [STATUS_VACANCY.ACTIVE, STATUS_VACANCY.INACTIVE],
+  },
   createdDate: {
     type: Date,
     required: true,
     default: new Date(),
   },
-  createdBy: { type: String, trim: true, required: true },
+  createdBy: { type: String, trim: true, required: true, ref: 'user' },
 });
 
 const VacancyModel = mongoose.model('vacancy', vacancySchema, 'vacancys');

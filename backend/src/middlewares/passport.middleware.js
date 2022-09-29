@@ -1,4 +1,4 @@
-const UserModel = require('../models/account.model/user.model');
+const UserModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const { KEYS, ACCOUNT_TYPES } = require('../constant');

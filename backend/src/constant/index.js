@@ -37,6 +37,11 @@ exports.TYPES_VACANCY = {
   FREELANCE: 'freelance',
 };
 
+exports.STATUS_VACANCY = {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+};
+
 exports.STATUS_APPLY = {
   PENDING: 'pending',
   ACCEPTED: 'accepted',
