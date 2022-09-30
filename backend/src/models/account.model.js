@@ -60,6 +60,16 @@ accountSchema.pre('save', async function (next) {
   }
 });
 
+accountSchema.set('toJSON', {
+  transform: function (doc, ret) {
+    delete ret.password;
+    delete ret.uuid;
+    delete ret.authType;
+    delete ret.__v;
+    delete ret._id;
+  },
+});
+
 const AccountModel = mongoose.model('account', accountSchema, 'accounts');
 
 module.exports = AccountModel;

@@ -27,7 +27,7 @@ vacancyApi.get(
 );
 
 vacancyApi.get(
-  '/:organizationId',
+  '/all/:organizationId',
   passportConfig.jwtAuthentication,
   vacancyController.getVacancies,
 );

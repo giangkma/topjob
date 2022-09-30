@@ -27,24 +27,12 @@ export const accountApi = {
         });
     },
 
-    putToggleWordFavorite: ({ username, word, isAdd }) => {
-        return axios.put(`${URL}/toggle-favorite`, {
-            username,
-            word,
-            isAdd,
-        });
-    },
-
-    putUpdateUserCoin: newCoin => {
-        return axios.put(`${URL}/update-coin`, { newCoin });
-    },
-
     putUpdateAvt: avtSrc => {
         return axios.put(`${URL}/update-avt`, { avtSrc });
     },
 
-    putUpdateProfile: ({ name, username }) => {
-        return axios.put(`${URL}/update-profile`, { name, username });
+    putUpdateProfile: (data) => {
+        return axios.put(`${URL}/update-profile`, data);
     },
 
     getUserInfo: () => {

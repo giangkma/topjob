@@ -14,7 +14,7 @@ export const Config = {
     POINT_OF_RIGHT_ANSWER: 10,
 
     ACCOUNT_TYPE: {
-        human_resources: 1,
-        employer: 2,
+        ADMIN: "admin",
+        EMPLOYEE: 'employee',
     },
 };

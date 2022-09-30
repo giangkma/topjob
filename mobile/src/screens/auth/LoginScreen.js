@@ -7,7 +7,7 @@ import { TouchableOpacity } from 'react-native';
 import { Text, View } from 'react-native-ui-lib';
 import { useDispatch } from 'react-redux';
 import { LoadingScreen, PrimaryButton, StyledTextInput } from 'screens';
-import { setUser } from 'store/auth';
+import { loginThunk, setUser } from 'store/auth';
 import { showAlert, tokenStorage } from 'utilities';
 import { AuthLayout } from './components';
 
@@ -22,20 +22,14 @@ export const LoginScreen = ({ route }) => {
     } = useForm({
         defaultValues: {
             email: __DEV__ ? 'giangdt.kma@gmail.com' : '',
-            password: __DEV__ ? 'giangdt' : '',
+            password: __DEV__ ? 'giangdt.kma@gmail.com' : '',
         },
     });
 
     const onSubmit = async data => {
         try {
             setLoading(true);
-            const { token } = await accountApi.postLogin(
-                data.email.toLowerCase(),
-                data.password,
-            );
-            tokenStorage.set(token);
-            const { user } = await accountApi.getUserInfo();
-            dispatch(setUser(user));
+            await dispatch(loginThunk(data));
         } catch (error) {
             showAlert(error.message);
         } finally {

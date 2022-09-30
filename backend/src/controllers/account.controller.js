@@ -9,6 +9,7 @@ const {
   getProfile,
   updateAvt,
   updateProfile,
+  getUserInfo,
 } = require('../services/account.service');
 const {
   COOKIE_EXPIRES_TIME,
@@ -180,17 +181,8 @@ exports.putUpdateAvt = async (req, res, next) => {
 exports.putUpdateProfile = async (req, res, next) => {
   try {
     const { user } = req;
-    const { name, username } = req.body;
-    if (!Boolean(user)) {
-      throw new Error('Update failed');
-    }
-
-    const update = await updateProfile(user.username, name, username);
-    if (!update.status) {
-      throw new Error(update.message);
-    }
-
-    return res.status(200).json({ message: 'success' });
+    const newInfo = await updateProfile(user, req.body);
+    return res.status(200).json(newInfo);
   } catch (error) {
     throwError(res, error);
   }
@@ -198,12 +190,14 @@ exports.putUpdateProfile = async (req, res, next) => {
 
 exports.getUserInfo = async (req, res) => {
   try {
-    const { isAuth = false } = res.locals;
-
-    if (!isAuth) {
-      throw new Error('Account not found');
+    const { user } = req;
+    if (!user) {
+      throw new Error(
+        'You are not logged in. Please login to continue this action',
+      );
     }
-    return res.status(200).json({ user: req.user });
+    const userInfo = await getUserInfo(user);
+    return res.status(200).json(userInfo);
   } catch (error) {
     throwError(res, error);
   }

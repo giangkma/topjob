@@ -14,14 +14,24 @@ import { scaleSize, showAlert } from 'utilities';
 import { Colors } from 'assets/Colors';
 import { Config } from 'config';
 import { LoadingScreen, ProfileForm } from 'components';
+import { accountApi, organizationApi } from 'apis';
+import { useDispatch } from 'react-redux';
+import { setUser } from 'store/auth';
 
 export const StartupScreen = () => {
     const [selectedType, setSelectedType] = useState();
     const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
 
     const onSubmit = async data => {
         try {
             setLoading(true);
+            data.establishedDate = new Date();
+            await organizationApi.postCreate(data);
+            const user = await accountApi.putUpdateProfile({
+                role: selectedType
+            });
+            dispatch(setUser(user));
         } catch (error) {
             showAlert(error.message);
         } finally {
@@ -44,14 +54,14 @@ export const StartupScreen = () => {
                 bg-white
                 style={styles.box}
                 centerH
-                paddingT-50
+                paddingT-30
                 paddingB-50
                 flex
                 spread
             >
                 <View center>
                     <PersonCircle3 />
-                    <Text fw7 fs18 marginT-20>
+                    <Text fw7 fs18 marginV-20>
                         What are you looking for?
                     </Text>
                 </View>
@@ -63,7 +73,7 @@ export const StartupScreen = () => {
                         br20
                         paddingV-20
                         onPress={() =>
-                            setSelectedType(Config.ACCOUNT_TYPE.human_resources)
+                            setSelectedType(Config.ACCOUNT_TYPE.EMPLOYEE)
                         }
                     >
                         <PersonCircle1 />
@@ -77,7 +87,7 @@ export const StartupScreen = () => {
                         br20
                         paddingV-20
                         onPress={() =>
-                            setSelectedType(Config.ACCOUNT_TYPE.employer)
+                            setSelectedType(Config.ACCOUNT_TYPE.ADMIN)
                         }
                     >
                         <PersonCircle2 />

@@ -59,31 +59,27 @@ exports.updateAvt = async (username = '', avtSrc = '') => {
   }
 };
 
-exports.updateProfile = async (
-  username = '',
-  newName = '',
-  newUsername = '',
-) => {
+exports.updateProfile = async (user, data) => {
   try {
-    if (username.toLowerCase() !== newUsername.toLowerCase()) {
-      const isExist = await UserModel.exists({ username: newUsername });
-      if (isExist) {
-        return { status: false, message: 'Username already in use' };
-      }
-    }
-
-    const isUpdated = await UserModel.updateOne(
-      { username },
-      { name: newName, username: newUsername },
-    );
-
-    if (isUpdated.n && isUpdated.ok)
-      return { status: true, message: 'success' };
-
-    return false;
+    const { name, role, avatar } = data;
+    if (!!role && !!user.role)
+      throw new Error('You are not allowed to change role');
+    const dataUpdate = {};
+    if (name) dataUpdate.name = name;
+    if (role) dataUpdate.role = role;
+    if (avatar) dataUpdate.avt = avatar;
+    await UserModel.updateOne({ _id: user._id }, dataUpdate);
+    return this.getUserInfo(user);
   } catch (error) {
     throw error;
   }
+};
+
+exports.getUserInfo = user => {
+  console.log(user);
+  return UserModel.findById(user._id)
+    .populate('organizations')
+    .populate('accountId');
 };
 
 exports.getProfile = async (accountId = '') => {

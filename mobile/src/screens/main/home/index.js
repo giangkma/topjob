@@ -1,71 +1,61 @@
-import { accountApi, topicApi, wordApi } from 'apis';
-import { Icons, Images, LogoIcon, Menu, Notify, Search, Sort } from 'assets';
-import React, { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { accountApi, topicApi, vacancyApi } from 'apis';
+import { LogoIcon, Notify, Sort } from 'assets';
+import { SearchInput, WrapIconButton } from 'components';
 import { ScrollView, TouchableOpacity } from 'react-native';
-import { Image, Text, View } from 'react-native-ui-lib';
+import { Text, View } from 'react-native-ui-lib';
 import { useDispatch, useSelector } from 'react-redux';
 import { Layout } from 'screens';
-import { getFavoriteList, setFavoriteList, setUser } from 'store/auth';
+import {
+    getOrganization,
+    getProfileThunk,
+    onLogout,
+    setUser,
+} from 'store/auth';
 import { setTopics } from 'store/flashCards';
-import { scaleSize, showAlert } from 'utilities';
-import { SearchInput, StyledTextInput, WrapIconButton } from 'components';
+import { showAlert } from 'utilities';
 import { CardRecentApplied, CardVacancy } from './components';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from 'hooks';
 
 export const HomeScreen = ({ navigation }) => {
-    const { t } = useTranslation();
-    const { data, total } = useSelector(getFavoriteList);
+    const [vacancies, setVacancies] = useState([]);
+    const { organization } = useAuth();
     const dispatch = useDispatch();
 
-    const getTopics = async () => {
+    const getInit = async () => {
         try {
-            const res = await topicApi.getTopics();
-            dispatch(setTopics(res));
-        } catch (error) {
-            showAlert(error.message);
-        }
-    };
-
-    const getProfile = async () => {
-        try {
-            const { user } = await accountApi.getUserInfo();
-            const { email } = await accountApi.getUserProfile();
-            dispatch(
-                setUser({
-                    ...user,
-                    email,
-                }),
+            console.log('organization', organization);
+            if (!organization) return;
+            await dispatch(getProfileThunk());
+            console.log(organization._id);
+            const vacanciesData = await vacancyApi.getVacanciesOfOrganization(
+                organization._id,
             );
+            console.log('vacanciesData', vacanciesData);
+            setVacancies(vacanciesData);
         } catch (error) {
             showAlert(error.message);
         }
     };
 
-    const getFavoriteWords = async () => {
-        try {
-            if (data && total !== 0) return;
-            const { packList, total: t } = await wordApi.getUserFavoriteList();
-            dispatch(setFavoriteList({ packList, total: t }));
-        } catch (error) {
-            showAlert(error.message);
-        }
+    const onClickLogout = () => {
+        dispatch(onLogout());
     };
 
     useEffect(() => {
-        // getTopics();
-        // getProfile();
-        // getFavoriteWords();
+        getInit();
     }, []);
+
     return (
         <Layout bg2 isScroll={true}>
             <View width="100%" row centerV spread paddingB-15>
                 <View row centerV>
                     <LogoIcon />
                     <Text marginL-10 black fs17 fw7>
-                        Hello, Admin!
+                        Hello, {organization?.name}!
                     </Text>
                 </View>
-                <WrapIconButton icon={<Notify />} />
+                <WrapIconButton onPress={onClickLogout} icon={<Notify />} />
             </View>
             <View width="100%" marginT-10 row centerV spread paddingB-15>
                 <SearchInput />
@@ -84,7 +74,9 @@ export const HomeScreen = ({ navigation }) => {
                         </Text>
                     </TouchableOpacity>
                 </View>
-                <CardVacancy />
+                {vacancies.map((item, index) => (
+                    <CardVacancy />
+                ))}
                 <View marginV-20 row centerV spread>
                     <Text black fs17 fw7>
                         Recent People Applied

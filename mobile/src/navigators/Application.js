@@ -22,18 +22,18 @@ const Stack = createStackNavigator();
 const Tabs = AnimatedTabBarNavigator();
 // @refresh reset
 export const ApplicationNavigator = () => {
-    const { isLogged } = useAuth();
+    const { isLogged, user } = useAuth();
     console.disableYellowBox = true;
     useEffect(() => {
         SplashScreen.hide();
     });
-    const isProfileSetupDone = true;
+    const isNeedSetupProfile = !user?.role || !user?.organizations.length;
 
     return (
         <NavigationContainer ref={navigationRef}>
             <StatusBar barStyle="light-content" />
             {isLogged ? (
-                !isProfileSetupDone ? (
+                isNeedSetupProfile ? (
                     <Stack.Navigator
                         initialRouteName={'StartUpScreen'}
                         screenOptions={{ headerShown: false }}
@@ -46,7 +46,7 @@ export const ApplicationNavigator = () => {
                 ) : (
                     <>
                         <Stack.Navigator
-                            initialRouteName={'CreateVacancy'}
+                            initialRouteName={'MainTabs'}
                             screenOptions={{ headerShown: false }}
                         >
                             <Stack.Screen
