@@ -1,38 +1,51 @@
-import { accountApi, topicApi, vacancyApi } from 'apis';
-import { LogoIcon, Notify, Sort } from 'assets';
-import { SearchInput, WrapIconButton } from 'components';
-import { ScrollView, TouchableOpacity } from 'react-native';
-import { Text, View } from 'react-native-ui-lib';
+import { ArrowDown, LogoIcon, Notify, Sort } from 'assets';
+import { PrimaryButton, SearchInput, WrapIconButton } from 'components';
+import { useAuth } from 'hooks';
+import { navigate } from 'navigators/utils';
+import { ScrollView, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, Image } from 'react-native-ui-lib';
 import { useDispatch, useSelector } from 'react-redux';
 import { Layout } from 'screens';
 import {
-    getOrganization,
+    fetchAppliesThunk,
+    fetchVacanciesThunk,
+    getApplies,
     getProfileThunk,
+    getVacancies,
     onLogout,
-    setUser,
 } from 'store/auth';
-import { setTopics } from 'store/flashCards';
 import { showAlert } from 'utilities';
-import { CardRecentApplied, CardVacancy } from './components';
-import React, { useEffect, useState } from 'react';
-import { useAuth } from 'hooks';
+import {
+    CardVacancy,
+    CardApplicant,
+    ModalSelectOrganization,
+    MainTabsLayout,
+    EmptyVacancies,
+} from '../components';
+import React, { useEffect, useMemo } from 'react';
+import { Config } from 'config';
+import { useState } from 'react';
+import { images } from 'assets/Images';
 
-export const HomeScreen = ({ navigation }) => {
-    const [vacancies, setVacancies] = useState([]);
+export const HomeScreen = () => {
+    const vacancies = useSelector(getVacancies);
+    const applies = useSelector(getApplies);
+    const [isChangeCompany, setIsChangeCompany] = useState(false);
+
+    const recentApplies = useMemo(() => {
+        return applies
+            .filter(apply => apply.status === Config.APPLY_STATUS.DRART)
+            .slice(0, 5);
+    }, [applies]);
+
     const { organization } = useAuth();
     const dispatch = useDispatch();
 
     const getInit = async () => {
         try {
-            console.log('organization', organization);
-            if (!organization) return;
             await dispatch(getProfileThunk());
-            console.log(organization._id);
-            const vacanciesData = await vacancyApi.getVacanciesOfOrganization(
-                organization._id,
-            );
-            console.log('vacanciesData', vacanciesData);
-            setVacancies(vacanciesData);
+            await dispatch(fetchVacanciesThunk());
+            await dispatch(fetchAppliesThunk());
         } catch (error) {
             showAlert(error.message);
         }
@@ -47,48 +60,77 @@ export const HomeScreen = ({ navigation }) => {
     }, []);
 
     return (
-        <Layout bg2 isScroll={true}>
+        <MainTabsLayout>
+            <ModalSelectOrganization
+                visible={isChangeCompany}
+                onClose={() => setIsChangeCompany(false)}
+            />
             <View width="100%" row centerV spread paddingB-15>
                 <View row centerV>
                     <LogoIcon />
-                    <Text marginL-10 black fs17 fw7>
-                        Hello, {organization?.name}!
-                    </Text>
+                    <TouchableOpacity
+                        row
+                        centerV
+                        onPress={() => setIsChangeCompany(true)}
+                    >
+                        <Text marginL-10 black fs17 fw7 marginR-5>
+                            Hello, {organization?.name}!
+                        </Text>
+                        <ArrowDown />
+                    </TouchableOpacity>
                 </View>
                 <WrapIconButton onPress={onClickLogout} icon={<Notify />} />
             </View>
-            <View width="100%" marginT-10 row centerV spread paddingB-15>
-                <SearchInput />
-                <View marginL-20>
-                    <WrapIconButton icon={<Sort />} />
+            {vacancies.length > 0 && (
+                <View width="100%" marginT-10 row centerV spread paddingB-15>
+                    <SearchInput />
+                    <View marginL-20>
+                        <WrapIconButton icon={<Sort />} />
+                    </View>
                 </View>
-            </View>
+            )}
             <ScrollView width="100%" height="100%">
-                <View marginV-20 row centerV spread>
-                    <Text black fs17 fw7>
-                        My Vacancies
-                    </Text>
-                    <TouchableOpacity>
-                        <Text primary fs14 fw7>
-                            See all
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                {vacancies.map((item, index) => (
-                    <CardVacancy />
-                ))}
-                <View marginV-20 row centerV spread>
-                    <Text black fs17 fw7>
-                        Recent People Applied
-                    </Text>
-                    <TouchableOpacity>
-                        <Text primary fs14 fw7>
-                            See all
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-                <CardRecentApplied />
+                {vacancies && vacancies.length > 0 ? (
+                    <>
+                        <View marginV-20 row centerV spread>
+                            <Text black fs17 fw7>
+                                My Vacancies
+                            </Text>
+                            <TouchableOpacity
+                                onPress={() => navigate('Vacancies')}
+                            >
+                                <Text primary fs14 fw7>
+                                    See all
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        {vacancies.map((item, index) => (
+                            <CardVacancy key={index} data={item} />
+                        ))}
+                        {recentApplies && recentApplies.length > 0 && (
+                            <>
+                                <View marginV-20 row centerV spread>
+                                    <Text black fs17 fw7>
+                                        Recent People Applied
+                                    </Text>
+                                    <TouchableOpacity
+                                        onPress={() => navigate('Applicants')}
+                                    >
+                                        <Text primary fs14 fw7>
+                                            See all
+                                        </Text>
+                                    </TouchableOpacity>
+                                </View>
+                                {recentApplies.map((item, index) => (
+                                    <CardApplicant key={index} data={item} />
+                                ))}
+                            </>
+                        )}
+                    </>
+                ) : (
+                    <EmptyVacancies />
+                )}
             </ScrollView>
-        </Layout>
+        </MainTabsLayout>
     );
 };

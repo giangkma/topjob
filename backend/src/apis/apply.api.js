@@ -8,6 +8,12 @@ applyApi.post(
   applyController.applyVacancy,
 );
 
+applyApi.put(
+  '/:applyId',
+  passportConfig.jwtAuthentication,
+  applyController.sendToApplicant,
+);
+
 applyApi.get(
   '/:id',
   passportConfig.jwtAuthentication,

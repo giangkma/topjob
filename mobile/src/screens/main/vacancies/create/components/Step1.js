@@ -1,36 +1,44 @@
 import { EditCircle, UploadCircle } from 'assets';
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { images } from 'assets/Images';
-import { PrimaryButton } from 'components';
+import { PrimaryButton, StyledSelectInput } from 'components';
 import { Controller, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet } from 'react-native';
-import { Image, Text, TouchableOpacity, View } from 'react-native-ui-lib';
+import {
+    Image,
+    Picker,
+    Text,
+    TouchableOpacity,
+    View,
+} from 'react-native-ui-lib';
 import { StyledTextInput } from 'screens';
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { Config } from 'config';
 
-export const Step1CreateVacancy = ({ onNextStep, data }) => {
+export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
     const {
         handleSubmit,
         control,
         formState: { errors },
         reset,
     } = useForm({
-        defaultValues: data.get(),
+        defaultValues: vacancy,
     });
 
     useFocusEffect(
         useCallback(() => {
-            if (data.get()) {
-                reset(data.get());
+            if (vacancy) {
+                reset(vacancy);
             }
-        }, [data]),
+        }, [vacancy]),
     );
 
     const onSubmit = value => {
-        data.set(value);
-        onNextStep();
+        onNextStep(value);
     };
+
+    const isUpdate = !!vacancy._id;
 
     return (
         <ScrollView style={{ maxHeight: '100%' }}>
@@ -107,28 +115,68 @@ export const Step1CreateVacancy = ({ onNextStep, data }) => {
                     rules={{ required: 'Location is required' }}
                 />
             </View>
-            <View marginT-10>
-                <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                        <StyledTextInput
-                            value={value}
-                            onBlur={onBlur}
-                            onChange={onChange}
-                            placeholder="Type"
-                            required
-                            error={errors.type && errors.type.message}
-                        />
-                    )}
-                    name="type"
-                    rules={{ required: 'Type is required' }}
-                />
+            <View marginT-10 row>
+                <View flex-3>
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <StyledSelectInput
+                                error={errors.type && errors.type.message}
+                                placeholder="Select Type"
+                                items={[
+                                    {
+                                        label: 'Full Time',
+                                        value: Config.VACANCY_TYPES.FULL_TIME,
+                                    },
+                                    {
+                                        label: 'Part Time',
+                                        value: Config.VACANCY_TYPES.PART_TIME,
+                                    },
+                                    {
+                                        label: 'Freelance',
+                                        value: Config.VACANCY_TYPES.FREELANCE,
+                                    },
+                                ]}
+                                label="Type"
+                                value={value}
+                                onChange={onChange}
+                                required
+                            />
+                        )}
+                        name="type"
+                        rules={{ required: 'Type is required' }}
+                    />
+                </View>
+                <View flex-2 marginL-10>
+                    <Controller
+                        control={control}
+                        render={({ field: { onChange, value } }) => (
+                            <StyledSelectInput
+                                placeholder="Select Status"
+                                items={[
+                                    {
+                                        label: 'Active',
+                                        value: Config.VACANCY_STATUS.ACTIVE,
+                                    },
+                                    {
+                                        label: 'In Active',
+                                        value: Config.VACANCY_STATUS.INACTIVE,
+                                    },
+                                ]}
+                                label="Status"
+                                value={value}
+                                onChange={onChange}
+                            />
+                        )}
+                        name="status"
+                    />
+                </View>
             </View>
             <PrimaryButton
                 onPress={handleSubmit(onSubmit)}
                 marginT-30
                 marginB-20
-                text="Next"
+                text={isUpdate ? 'Update Vacancy' : 'Next'}
             />
         </ScrollView>
     );

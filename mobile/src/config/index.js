@@ -14,7 +14,25 @@ export const Config = {
     POINT_OF_RIGHT_ANSWER: 10,
 
     ACCOUNT_TYPE: {
-        ADMIN: "admin",
+        ADMIN: 'admin',
         EMPLOYEE: 'employee',
+    },
+
+    VACANCY_STATUS: {
+        ACTIVE: 'active',
+        INACTIVE: 'inactive',
+    },
+
+    VACANCY_TYPES: {
+        FULL_TIME: 'full-time',
+        PART_TIME: 'part-time',
+        FREELANCE: 'freelance',
+    },
+
+    APPLY_STATUS: {
+        DRART: 'draft',
+        INTERVIEW: 'interview',
+        ACCEPTED: 'accepted',
+        REJECTED: 'rejected',
     },
 };

@@ -1,4 +1,4 @@
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import React from 'react';
 import { ScrollView, StyleSheet, Platform } from 'react-native';
 import { View } from 'react-native-ui-lib';
@@ -7,7 +7,7 @@ import { scaleSize } from 'utilities';
 export const Layout = ({ children, bg2, isScroll, paddingTop, ...props }) => {
     return (
         <View
-            paddingB-10
+            paddingB-20
             paddingH-18
             style={{
                 backgroundColor: Colors.greyChateau,

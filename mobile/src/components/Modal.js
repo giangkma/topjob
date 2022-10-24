@@ -1,5 +1,5 @@
 import { Images, Close } from 'assets';
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { PrimaryButton } from 'screens';
 import React from 'react';
 import {
@@ -54,7 +54,7 @@ export const Modal = ({
                                     paddingB-36
                                     pointerEvents={loading ? 'none' : 'auto'}
                                 >
-                                    <Text white fs24 fw9 font-black center>
+                                    <Text white fs16 fw9 font-black center>
                                         {text}
                                     </Text>
                                     <View marginV-16>
@@ -83,6 +83,7 @@ export const Modal = ({
                                                 }
                                             >
                                                 <PrimaryButton
+                                                    small
                                                     onPress={
                                                         agreeButton.onPress
                                                     }
@@ -99,6 +100,7 @@ export const Modal = ({
                                         {isHasCancelButton && (
                                             <View flex-1 row center marginT-15>
                                                 <PrimaryButton
+                                                    small
                                                     onPress={
                                                         cancelButton.onPress
                                                     }

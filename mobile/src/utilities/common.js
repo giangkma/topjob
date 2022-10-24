@@ -29,13 +29,8 @@ export const getInitials = string => {
     return initials;
 };
 
-export const randomPersonIcon = () => {
-    const personIcons = [<Person0 />, <Person1 />, <Person2 />];
-    const randomIndex = Math.floor(Math.random() * personIcons.length);
-    return personIcons[randomIndex];
-};
-
 export const cutString = (string, length) => {
+    if (!string) return '';
     if (string.length > length) {
         return string.substring(0, length) + '...';
     }

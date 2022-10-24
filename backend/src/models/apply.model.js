@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const { STATUS_APPLY } = require('../constant');
 const Schema = mongoose.Schema;
 
+const STATUS_APPLY_ENUM = Object.values(STATUS_APPLY);
+
 const applySchema = new Schema({
   user: { type: Schema.Types.ObjectId, required: true, ref: 'user' },
   vacancy: { type: Schema.Types.ObjectId, required: true, ref: 'vacancy' },
@@ -12,15 +14,23 @@ const applySchema = new Schema({
   },
   status: {
     type: String,
-    default: STATUS_APPLY.PENDING,
-    enum: [STATUS_APPLY.PENDING, STATUS_APPLY.ACCEPTED, STATUS_APPLY.REJECTED],
+    default: STATUS_APPLY.DRART,
+    enum: STATUS_APPLY_ENUM,
   },
-  requiments: [
+  requirements: [
     {
-      type: Number,
+      type: String,
+      trim: true,
       required: true,
     },
   ],
+  message: {
+    type: String,
+    trim: true,
+  },
+  timeInterview: {
+    type: Date,
+  },
   createdDate: {
     type: Date,
     required: true,

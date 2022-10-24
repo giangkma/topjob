@@ -16,7 +16,7 @@ exports.getVacancies = (userId, organizationId) => {
   return Model.find({
     createdBy: userId,
     organization: organizationId,
-  });
+  }).populate('organization');
 };
 
 exports.updateVacancy = (id, data) => {

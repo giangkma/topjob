@@ -1,4 +1,4 @@
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { scaleSize } from 'utilities/responsive';
 import React from 'react';
 import { StyleSheet } from 'react-native';

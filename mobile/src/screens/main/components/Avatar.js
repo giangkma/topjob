@@ -1,4 +1,4 @@
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { useAuth } from 'hooks';
 import { StyleSheet } from 'react-native';
 import { Image, Text, View } from 'react-native-ui-lib';

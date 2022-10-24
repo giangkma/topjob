@@ -1,7 +1,7 @@
 import { BorderRadiuses, Colors, Typography } from 'react-native-ui-lib';
 
 import { Fonts } from 'assets/Fonts';
-import { Colors as ColorsAsset } from 'assets/Colors';
+import { Colors as ColorsAsset } from 'assets';
 
 import { Platform } from 'react-native';
 import { scaleFont } from 'utilities';

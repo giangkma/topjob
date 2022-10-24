@@ -1,4 +1,4 @@
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { Facebook, Google } from 'assets/Svg';
 import { navigate } from 'navigators/utils';
 import { scaleSize } from 'utilities';

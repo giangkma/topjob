@@ -1,4 +1,4 @@
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { scaleSize } from 'utilities';
 import React from 'react';
 import { StyleSheet, ActivityIndicator } from 'react-native';
@@ -29,6 +29,7 @@ export const PrimaryButton = ({
                     style={[
                         small ? styles.smallButton : styles.button,
                         styles.borderButton,
+                        disabled && styles.disabled,
                     ]}
                 >
                     <View flex centerV centerH>
@@ -48,22 +49,20 @@ export const PrimaryButton = ({
                 </View>
             ) : (
                 <LinearGradient
-                    colors={
-                        disabled
-                            ? ['#676767', '#676767']
-                            : ['#367bff', '#367bff']
-                    }
+                    colors={['#367bff', '#367bff']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    style={small ? styles.smallButton : styles.button}
+                    style={[
+                        small ? styles.smallButton : styles.button,
+                        disabled && styles.disabled,
+                    ]}
                 >
                     <View flex centerV centerH>
                         {loading ? (
                             <ActivityIndicator color={Colors.white} />
                         ) : (
                             <Text
-                                white={!disabled}
-                                white50={disabled}
+                                white
                                 fw8
                                 font-extraBold
                                 style={{ fontSize: fs }}
@@ -94,5 +93,9 @@ const styles = StyleSheet.create({
     borderButton: {
         borderWidth: 2,
         borderColor: Colors.primary,
+    },
+    disabled: {
+        opacity: 0.6,
+        backgroundColor: Colors.greyChateau,
     },
 });

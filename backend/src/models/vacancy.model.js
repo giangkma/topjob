@@ -15,7 +15,7 @@ const vacancySchema = new Schema({
       TYPES_VACANCY.FREELANCE,
     ],
   },
-  requiments: [
+  requirements: [
     {
       type: String,
       trim: true,

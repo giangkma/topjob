@@ -44,3 +44,7 @@ export { default as PersonCircle3 } from './svg/person-circle-3.svg';
 export { default as CheckBlue } from './svg/check-blue.svg';
 export { default as CheckWhite } from './svg/check-white.svg';
 export { default as Remove } from './svg/remove.svg';
+export { default as Check } from './svg/check.svg';
+export { default as CloseRed } from './svg/close-red.svg';
+export { default as ArrowDown } from './svg/arrow-down.svg';
+export { default as Applications } from './svg/applicants.svg';

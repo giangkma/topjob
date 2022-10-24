@@ -29,7 +29,6 @@ export const ChangePasswordModal = ({ visible, onClose }) => {
     const onResetPassword = async data => {
         try {
             setLoading(true);
-            console.log(data);
         } catch (error) {
             showAlert(error.message);
         } finally {

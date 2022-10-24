@@ -1,5 +1,5 @@
 import { CheckBlue, Remove } from 'assets';
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { PrimaryButton } from 'components';
 import { ScrollView, StyleSheet } from 'react-native';
 import Textarea from 'react-native-textarea';
@@ -42,8 +42,8 @@ const CustomInput = ({ onChange, value, onRemove, enableEdit, onEdit }) => {
     );
 };
 
-export const FormMultipleInput = ({ onNextStep, title, data }) => {
-    const [items, setItem] = useState(data.get());
+export const FormMultipleInput = ({ onNextStep, title, data, isUpdate }) => {
+    const [items, setItem] = useState(data);
     const [indexItemEdit, setIndexItemEdit] = useState();
 
     const addItem = () => {
@@ -71,17 +71,11 @@ export const FormMultipleInput = ({ onNextStep, title, data }) => {
             showAlert('Please fill all input');
             return;
         }
-        data.set(items);
-        onNextStep();
+        onNextStep(items);
     };
 
     return (
         <View flex spread height="100%">
-            <View paddingB-10>
-                <Text black fw7 fs15>
-                    {title}
-                </Text>
-            </View>
             <ScrollView>
                 {items?.map((item, index) => {
                     const enableEdit = indexItemEdit === index;
@@ -103,13 +97,14 @@ export const FormMultipleInput = ({ onNextStep, title, data }) => {
                     marginT-10
                     text={`Add New ${title}`}
                     border
+                    small
                 />
             </ScrollView>
             <PrimaryButton
                 onPress={onClickNext}
                 marginB-10
                 paddingT-15
-                text={'Next'}
+                text={isUpdate ? 'Update Vacancy' : 'Next'}
             />
         </View>
     );

@@ -76,7 +76,6 @@ exports.updateProfile = async (user, data) => {
 };
 
 exports.getUserInfo = user => {
-  console.log(user);
   return UserModel.findById(user._id)
     .populate('organizations')
     .populate('accountId');

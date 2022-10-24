@@ -11,7 +11,7 @@ import { Logo } from 'screens';
 import React, { useState } from 'react';
 import { Images, PersonCircle1, PersonCircle2, PersonCircle3 } from 'assets';
 import { scaleSize, showAlert } from 'utilities';
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { Config } from 'config';
 import { LoadingScreen, ProfileForm } from 'components';
 import { accountApi, organizationApi } from 'apis';
@@ -29,7 +29,7 @@ export const StartupScreen = () => {
             data.establishedDate = new Date();
             await organizationApi.postCreate(data);
             const user = await accountApi.putUpdateProfile({
-                role: selectedType
+                role: selectedType,
             });
             dispatch(setUser(user));
         } catch (error) {
@@ -43,7 +43,11 @@ export const StartupScreen = () => {
         return (
             <>
                 {loading && <LoadingScreen />}
-                <ProfileForm onSubmit={onSubmit} title="Organization Profile" />
+                <ProfileForm
+                    back
+                    onSubmit={onSubmit}
+                    title="Organization Profile"
+                />
             </>
         );
     }

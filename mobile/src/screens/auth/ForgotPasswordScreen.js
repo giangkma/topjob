@@ -1,6 +1,6 @@
 import { accountApi } from 'apis';
 import { Chevronleft, Code, Email, Lock } from 'assets';
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { navigate } from 'navigators/utils';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -50,7 +50,6 @@ export const ForgotPasswordScreen = () => {
     const onResetPassword = async data => {
         try {
             setLoading(true);
-            console.log(data);
             const { code, password } = data;
             await accountApi.postResetPassword(email, password, code);
             setResetSuccess(true);

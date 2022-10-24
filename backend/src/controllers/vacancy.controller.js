@@ -63,7 +63,7 @@ exports.createVacancy = async (req, res) => {
       salary,
       location,
       type,
-      requiments,
+      requirements,
       benefits,
       organizationId,
     } = req.body;
@@ -86,7 +86,7 @@ exports.createVacancy = async (req, res) => {
       salary,
       location,
       type,
-      requiments,
+      requirements,
       benefits,
       organization: organizationId,
       createdBy: user._id,
@@ -126,7 +126,7 @@ exports.updateVacancy = async (req, res) => {
   try {
     const { id } = req.params;
     const { user } = req;
-    const { position, salary, location, type, requiments, benefits, status } =
+    const { position, salary, location, type, requirements, benefits, status } =
       req.body;
     const vacancy = await findVacancyById(id);
     if (!vacancy) {
@@ -146,7 +146,7 @@ exports.updateVacancy = async (req, res) => {
       salary,
       location,
       type,
-      requiments,
+      requirements,
       benefits,
       status,
     });

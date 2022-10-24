@@ -1,4 +1,4 @@
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { View } from 'react-native-ui-lib';
 import { scaleSize } from 'utilities';

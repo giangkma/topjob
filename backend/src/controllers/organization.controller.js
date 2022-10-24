@@ -34,13 +34,14 @@ exports.updateOrganization = async (req, res) => {
   try {
     const { user } = req;
     const { id } = req.params;
-    const { email, country, address, establishedDate, logo } = req.body;
+    const { email, country, address, establishedDate, logo, name } = req.body;
     const organization = await checkOrganization(id, user);
     if (email) organization.email = email;
     if (country) organization.country = country;
     if (address) organization.address = address;
     if (establishedDate) organization.establishedDate = establishedDate;
     if (logo) organization.logo = logo;
+    if (name) organization.name = name;
 
     await organization.save();
 

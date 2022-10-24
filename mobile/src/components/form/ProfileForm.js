@@ -7,38 +7,62 @@ import {
     Logout,
     UploadCircle,
 } from 'assets';
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { images } from 'assets/Images';
-import { PrimaryButton, WrapIconButton } from 'components';
+import { PrimaryButton, WrapIconButton, BackPageButton } from 'components';
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Image, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { useDispatch } from 'react-redux';
 import { Layout, LoadingScreen, StyledTextInput } from 'screens';
-import { setUser } from 'store/auth';
-import { showAlert, tokenStorage } from 'utilities';
 
-export const ProfileForm = ({ enableLogOut, title = 'Profile', onSubmit }) => {
+export const ProfileForm = ({
+    enableLogOut,
+    title = 'Profile',
+    onSubmit,
+    organization,
+    back,
+    ...props
+}) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+
     const {
         handleSubmit,
         control,
         formState: { errors },
-        setValue,
-    } = useForm();
+        reset,
+    } = useForm({
+        defaultValues: {
+            name: '',
+            email: '',
+            country: '',
+            address: '',
+        },
+    });
+
+    useEffect(() => {
+        if (organization) {
+            reset(organization);
+        }
+    }, [organization]);
 
     return (
-        <Layout>
+        <Layout {...props}>
             {loading && <LoadingScreen />}
             <View width="100%" row centerV spread paddingB-15>
-                <View row centerV>
-                    <LogoIcon />
-                    <Text marginL-10 black fs17 fw7>
-                        {title}
-                    </Text>
-                </View>
+                {back ? (
+                    <BackPageButton text={title} />
+                ) : (
+                    <View row centerV>
+                        <LogoIcon />
+                        <Text marginL-10 black fs17 fw7>
+                            {title}
+                        </Text>
+                    </View>
+                )}
                 {enableLogOut && (
                     <WrapIconButton
                         bg-red2
@@ -144,7 +168,6 @@ export const ProfileForm = ({ enableLogOut, title = 'Profile', onSubmit }) => {
                 <PrimaryButton
                     onPress={handleSubmit(onSubmit)}
                     marginT-30
-                    marginB-120
                     text="Confirm"
                 />
             </ScrollView>

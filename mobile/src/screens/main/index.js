@@ -1,4 +1,4 @@
-export * from './applications';
-export * from './create_vacancy';
+export * from './vacancies';
 export * from './home';
 export * from './profile';
+export * from './applicants';

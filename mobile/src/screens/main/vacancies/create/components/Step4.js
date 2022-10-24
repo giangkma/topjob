@@ -1,12 +1,16 @@
-import { CheckBlue, Remove } from 'assets';
-import { Colors } from 'assets/Colors';
-import { LoadingScreen, PrimaryButton } from 'components';
-import { ScrollView, StyleSheet } from 'react-native';
-import Textarea from 'react-native-textarea';
-import { Image, Text, TouchableOpacity, View } from 'react-native-ui-lib';
-import { convertToSalary, cutString, scaleSize, showAlert } from 'utilities';
-import React, { useState } from 'react';
+import { vacancyApi } from 'apis';
+import { CheckBlue } from 'assets';
+import { Colors } from 'assets';
 import { images } from 'assets/Images';
+import { LoadingScreen, PrimaryButton } from 'components';
+import { useState } from 'react';
+import { ScrollView, StyleSheet } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native-ui-lib';
+import { useDispatch } from 'react-redux';
+import { postJobVacancyThunk } from 'store/auth';
+import { convertToSalary, cutString, scaleSize } from 'utilities';
+import React from 'react';
+import { navigate } from 'navigators/utils';
 
 const STATUS = {
     pending: 'PENDING',
@@ -14,13 +18,26 @@ const STATUS = {
     error: 'ERROR',
 };
 
-export const Step4CreateVacancy = ({ data }) => {
-    const [status, setStatus] = useState(STATUS.error);
-    const [isLoading, setIsLoading] = useState(false);
-    const onPostJobVacancy = () => {};
+export const Step4CreateVacancy = ({ vacancy, onResetFormVacancy }) => {
+    const [status, setStatus] = useState(STATUS.pending);
+    const [loading, setLoading] = useState(false);
+    const dispatch = useDispatch();
+
+    const onPostJobVacancy = async () => {
+        try {
+            setLoading(true);
+            console.log('vacancy', vacancy);
+            await dispatch(postJobVacancyThunk(vacancy));
+            setStatus(STATUS.success);
+        } catch (error) {
+            setStatus(STATUS.error);
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <View flex spread height="100%">
-            {isLoading && <LoadingScreen />}
+            {loading && <LoadingScreen />}
             <ScrollView>
                 <View flex-1 style={styles.container} row centerV bg-white br20>
                     <View>
@@ -28,7 +45,7 @@ export const Step4CreateVacancy = ({ data }) => {
                     </View>
                     <View marginL-15>
                         <Text black font-bold fs14>
-                            {cutString(data.infor?.position, 28)}
+                            {cutString(vacancy.position, 28)}
                         </Text>
                         <Text marginT-5 black fs12>
                             Air BNB
@@ -64,7 +81,7 @@ export const Step4CreateVacancy = ({ data }) => {
                             }}
                         />
                         <Text red3 font-extraBold fs20>
-                            Job Vacancy Posted!
+                            Oops, Failed to post
                         </Text>
                         <Text center marginT-15 grey3>
                             Please make sure that your internet connection is
@@ -79,7 +96,7 @@ export const Step4CreateVacancy = ({ data }) => {
                                 Salary
                             </Text>
                             <Text primary fs14 fw7>
-                                ${convertToSalary(data.infor?.salary)}
+                                ${convertToSalary(vacancy.salary)}
                             </Text>
                         </View>
                         <View row spread marginT-7 centerH>
@@ -87,7 +104,7 @@ export const Step4CreateVacancy = ({ data }) => {
                                 Type
                             </Text>
                             <Text primary fs14 fw7>
-                                {data.infor?.type}
+                                {vacancy.type}
                             </Text>
                         </View>
                         <View row spread marginT-7 centerH>
@@ -95,14 +112,14 @@ export const Step4CreateVacancy = ({ data }) => {
                                 Location
                             </Text>
                             <Text primary fs14 fw7>
-                                {data.infor?.location}
+                                {vacancy.location}
                             </Text>
                         </View>
                         <View width="100%" height={1} bg-grey2 marginT-20 />
                         <Text black fw7 fs15 marginT-20>
                             Requirements
                         </Text>
-                        {data.requirements.map(value => (
+                        {vacancy.requirements.map(value => (
                             <View style={{ position: 'relative' }} paddingT-8>
                                 <TouchableOpacity
                                     style={styles.box}
@@ -119,9 +136,9 @@ export const Step4CreateVacancy = ({ data }) => {
                             </View>
                         ))}
                         <Text black fw7 fs15 marginT-20>
-                            Benifits
+                            benefits
                         </Text>
-                        {data.benifits.map(value => (
+                        {vacancy.benefits.map(value => (
                             <View style={{ position: 'relative' }} paddingT-8>
                                 <TouchableOpacity
                                     style={styles.box}
@@ -143,12 +160,12 @@ export const Step4CreateVacancy = ({ data }) => {
             {status === STATUS.success ? (
                 <>
                     <PrimaryButton
-                        onPress={onPostJobVacancy}
+                        onPress={() => navigate('Vacancies')}
                         marginB-10
-                        text="Go to Applications"
+                        text="Go to Vacancies"
                     />
                     <PrimaryButton
-                        onPress={onPostJobVacancy}
+                        onPress={onResetFormVacancy}
                         marginB-10
                         text="Post Another Vacancy"
                         border
@@ -162,7 +179,7 @@ export const Step4CreateVacancy = ({ data }) => {
                         text="Try Again"
                     />
                     <PrimaryButton
-                        onPress={onPostJobVacancy}
+                        onPress={() => navigate('Home')}
                         marginB-10
                         text="Back to Home"
                         border

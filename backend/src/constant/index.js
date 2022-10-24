@@ -43,7 +43,8 @@ exports.STATUS_VACANCY = {
 };
 
 exports.STATUS_APPLY = {
-  PENDING: 'pending',
+  DRART: 'draft',
+  INTERVIEW: 'interview',
   ACCEPTED: 'accepted',
   REJECTED: 'rejected',
 };

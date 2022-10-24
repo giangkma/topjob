@@ -2,18 +2,22 @@ import { ForgotPasswordScreen, LoginScreen, SignupScreen } from 'screens/auth';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Home, List, Message, Person } from 'assets';
-import { Colors } from 'assets/Colors';
+import { Applications, Home, List, Message, Person } from 'assets';
+import { Colors } from 'assets';
 import { useAuth } from 'hooks';
 import React, { useEffect } from 'react';
 import { StatusBar } from 'react-native';
 import { AnimatedTabBarNavigator } from 'react-native-animated-nav-tab-bar';
 import SplashScreen from 'react-native-splash-screen';
 import {
-    ApplicationsScreen,
+    VacanciesScreen,
     CreateVacancyScreen,
     HomeScreen,
     ProfileScreen,
+    DetailVacancyScreen,
+    ApplicantDetailScreen,
+    ApplicantListScreen,
+    CreateProfileScreen,
 } from 'screens/main';
 import { navigationRef } from './utils';
 import { StartupScreen } from 'screens/startup/StartupScreen';
@@ -52,6 +56,18 @@ export const ApplicationNavigator = () => {
                             <Stack.Screen
                                 name="CreateVacancy"
                                 component={CreateVacancyScreen}
+                            />
+                            <Stack.Screen
+                                name="DetailVacancy"
+                                component={DetailVacancyScreen}
+                            />
+                            <Stack.Screen
+                                name="DetailApplicant"
+                                component={ApplicantDetailScreen}
+                            />
+                            <Stack.Screen
+                                name="CreateOrganization"
+                                component={CreateProfileScreen}
                             />
                             <Stack.Screen
                                 name="MainTabs"
@@ -103,17 +119,17 @@ const MainTabs = () => {
                 }}
             />
             <Tabs.Screen
-                name="Aplications"
-                component={ApplicationsScreen}
+                name="Vacancies"
+                component={VacanciesScreen}
                 options={{
                     tabBarIcon: ({ focused, color, size }) => <List />,
                 }}
             />
             <Tabs.Screen
-                name="Chat"
-                component={HomeScreen}
+                name="Applicants"
+                component={ApplicantListScreen}
                 options={{
-                    tabBarIcon: ({ focused, color, size }) => <Message />,
+                    tabBarIcon: ({ focused, color, size }) => <Applications />,
                 }}
             />
             <Tabs.Screen

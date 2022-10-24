@@ -37,8 +37,12 @@ exports.getApplies = async ({ userId, organizationId, vacancyId, query }) => {
 
   if (isSortScore) {
     return applies.sort((a, b) => {
-      return b.requiments.length - a.requiments.length;
+      return b.requirements.length - a.requirements.length;
     });
   }
   return applies;
+};
+
+exports.updateApply = async (id, data) => {
+  return Model.findByIdAndUpdate(id, data, { new: true });
 };

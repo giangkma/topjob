@@ -8,7 +8,7 @@ import { getUser, onLogout } from 'store/auth';
 import { getInitials } from 'utilities';
 import { useAuth } from 'hooks';
 import { navigate } from './utils';
-import { Colors } from 'assets/Colors';
+import { Colors } from 'assets';
 import { Avatar } from 'screens/main/components';
 
 export const DrawerContent = props => {
