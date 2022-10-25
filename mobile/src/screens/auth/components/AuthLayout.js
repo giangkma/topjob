@@ -7,12 +7,12 @@ import { SocialButtons } from '.';
 
 export const AuthLayout = ({ children, text }) => {
     return (
-        <Layout isScroll paddingTop={0}>
+        <Layout isScroll>
             <View paddingB-80>
-                <View row center paddingH-10>
+                <View row center>
                     <Logo />
                 </View>
-                <View paddingH-32>
+                <View>
                     <View paddingH-8 paddingB-22>
                         <Text black center fs19 fw9 font-black>
                             {text}

@@ -92,10 +92,9 @@ export const ApplicantDetailScreen = ({ route }) => {
     return (
         <Layout paddingB-10>
             {loading && <LoadingScreen />}
-
             <BackPageButton text="Applicants" />
-            <ScrollView>
-                <View flex-1 style={styles.container} bg-white br20 marginB-20>
+            <View flex spread>
+                <View style={styles.container} bg-white br20 marginB-20>
                     <View row centerV>
                         <View>
                             <Image
@@ -237,7 +236,7 @@ export const ApplicantDetailScreen = ({ route }) => {
                         text="Send to Applicant"
                     />
                 )}
-            </ScrollView>
+            </View>
         </Layout>
     );
 };

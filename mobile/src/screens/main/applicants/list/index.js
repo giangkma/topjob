@@ -19,6 +19,7 @@ import { useDebounce } from 'hooks';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 import { images } from 'assets/Images';
+import { LogoIcon } from 'assets';
 
 const menu = ['All', 'Draft', 'Interview', 'Rejected', 'Accepted'];
 
@@ -34,7 +35,7 @@ export const ApplicantListScreen = () => {
         status => {
             setActiveTab(status);
             if (status == menu[0]) return setAppliesDisplay(applies);
-            const appliesFilter = applies.filter(
+            const appliesFilter = applies?.filter(
                 vacancy => vacancy.status === status.toLowerCase(),
             );
             setAppliesDisplay(appliesFilter);
@@ -51,7 +52,7 @@ export const ApplicantListScreen = () => {
 
     useEffect(() => {
         if (debouncedSearch) {
-            const filter = applies.filter(
+            const filter = applies?.filter(
                 item =>
                     item.vacancy.position
                         .toLowerCase()
@@ -68,10 +69,15 @@ export const ApplicantListScreen = () => {
 
     return (
         <MainTabsLayout>
-            <BackPageButton text="Applicants" />
+            <View row centerV paddingB-15>
+                <LogoIcon />
+                <Text marginL-10 black fs17 fw7>
+                    Applicants
+                </Text>
+            </View>
             {applies && applies.length > 0 ? (
                 <>
-                    <View width="100%" row centerV spread>
+                    <View marginT-10 width="100%" row centerV spread>
                         <SearchInput onChange={text => setSearch(text)} />
                     </View>
                     <ScrollView width="100%" height="100%">
@@ -90,7 +96,7 @@ export const ApplicantListScreen = () => {
                                         marginT-5
                                         text={item}
                                         small
-                                        fontSize={13}
+                                        fontSize={12}
                                         border={!isAcive}
                                     />
                                 );

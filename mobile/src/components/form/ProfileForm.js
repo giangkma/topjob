@@ -7,7 +7,7 @@ import {
     Logout,
     UploadCircle,
 } from 'assets';
-import { Colors } from 'assets';
+import { Colors, ArrowDown } from 'assets';
 import { images } from 'assets/Images';
 import { PrimaryButton, WrapIconButton, BackPageButton } from 'components';
 import React, { useState } from 'react';
@@ -17,6 +17,8 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { Image, Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { useDispatch } from 'react-redux';
 import { Layout, LoadingScreen, StyledTextInput } from 'screens';
+import { onLogout } from 'store/auth';
+import { ModalSelectOrganization } from 'screens/main/components';
 
 export const ProfileForm = ({
     enableLogOut,
@@ -28,6 +30,7 @@ export const ProfileForm = ({
 }) => {
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+    const [isChangeCompany, setIsChangeCompany] = useState(false);
 
     const {
         handleSubmit,
@@ -51,22 +54,36 @@ export const ProfileForm = ({
 
     return (
         <Layout {...props}>
+            <ModalSelectOrganization
+                visible={isChangeCompany}
+                onClose={() => setIsChangeCompany(false)}
+            />
             {loading && <LoadingScreen />}
             <View width="100%" row centerV spread paddingB-15>
-                {back ? (
-                    <BackPageButton text={title} />
-                ) : (
-                    <View row centerV>
-                        <LogoIcon />
-                        <Text marginL-10 black fs17 fw7>
-                            {title}
-                        </Text>
-                    </View>
-                )}
+                <View row centerV>
+                    {back ? (
+                        <BackPageButton text={title} />
+                    ) : (
+                        <View row centerV>
+                            <LogoIcon />
+                            <Text marginL-10 black fs17 fw7>
+                                {title}
+                            </Text>
+                        </View>
+                    )}
+                    {organization && (
+                        <TouchableOpacity
+                            marginL-5
+                            onPress={() => setIsChangeCompany(true)}
+                        >
+                            <ArrowDown />
+                        </TouchableOpacity>
+                    )}
+                </View>
                 {enableLogOut && (
                     <WrapIconButton
                         bg-red2
-                        onPress={() => {}}
+                        onPress={() => dispatch(onLogout())}
                         icon={<Logout />}
                     />
                 )}

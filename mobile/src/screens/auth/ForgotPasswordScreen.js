@@ -69,7 +69,7 @@ export const ForgotPasswordScreen = () => {
     };
 
     return (
-        <Layout marginT-30>
+        <Layout>
             {loading && <LoadingScreen />}
             <Modal
                 visible={isResetSuccess}
@@ -81,7 +81,7 @@ export const ForgotPasswordScreen = () => {
                 }}
                 loading={loading}
             />
-            <View width="100%" flex paddingB-50 paddingH-32>
+            <View width="100%" flex paddingB-20>
                 <BackPageButton text="Forgot Password" navigateTo={'Login'} />
                 <ScrollView>
                     {isSendCodeSuccess ? (

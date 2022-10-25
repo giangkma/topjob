@@ -18,7 +18,7 @@ export const useAuth = () => {
         if (!user || !token) {
             dispatch(onLogout());
         } else if (!organization) {
-            dispatch(setOrganization(user?.organizations[0]));
+            dispatch(setOrganization(user?.organizations?.[0]));
         }
     }, [token, user]);
 

@@ -15,6 +15,8 @@ const slice = createSlice({
             tokenStorage.clear();
             state.user = undefined;
             state.organization = undefined;
+            state.vacancies = [];
+            state.applies = [];
         },
         setUser: (state, { payload: user }) => {
             state.user = {
@@ -26,9 +28,11 @@ const slice = createSlice({
             state.organization = organization;
         },
         setVacancies: (state, { payload: vacancies }) => {
+            if (!vacancies) return;
             state.vacancies = vacancies;
         },
         setApplies: (state, { payload: applies }) => {
+            if (!applies) return;
             state.applies = applies;
         },
     },
@@ -74,7 +78,10 @@ export const getProfileThunk = () => async dispatch => {
 
 export const newOrganizationThunk = data => async dispatch => {
     const organization = await organizationApi.postCreate(data);
-    dispatch(getInitStateForOrganizationThunk(organization));
+    dispatch(setOrganization(organization));
+    await dispatch(getProfileThunk());
+    dispatch(setVacancies([]));
+    dispatch(setApplies([]));
 };
 
 export const updateOrganizationThunk = data => async (dispatch, getState) => {

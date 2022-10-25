@@ -1,5 +1,10 @@
 import { ArrowDown, LogoIcon, Notify, Sort } from 'assets';
-import { PrimaryButton, SearchInput, WrapIconButton } from 'components';
+import {
+    LoadingScreen,
+    PrimaryButton,
+    SearchInput,
+    WrapIconButton,
+} from 'components';
 import { useAuth } from 'hooks';
 import { navigate } from 'navigators/utils';
 import { ScrollView, StyleSheet } from 'react-native';
@@ -25,16 +30,16 @@ import {
 import React, { useEffect, useMemo } from 'react';
 import { Config } from 'config';
 import { useState } from 'react';
-import { images } from 'assets/Images';
 
 export const HomeScreen = () => {
+    const [loading, setLoading] = useState(false);
     const vacancies = useSelector(getVacancies);
     const applies = useSelector(getApplies);
     const [isChangeCompany, setIsChangeCompany] = useState(false);
 
     const recentApplies = useMemo(() => {
         return applies
-            .filter(apply => apply.status === Config.APPLY_STATUS.DRART)
+            ?.filter(apply => apply.status === Config.APPLY_STATUS.DRART)
             .slice(0, 5);
     }, [applies]);
 
@@ -43,11 +48,14 @@ export const HomeScreen = () => {
 
     const getInit = async () => {
         try {
+            setLoading(true);
             await dispatch(getProfileThunk());
             await dispatch(fetchVacanciesThunk());
             await dispatch(fetchAppliesThunk());
         } catch (error) {
             showAlert(error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -61,6 +69,7 @@ export const HomeScreen = () => {
 
     return (
         <MainTabsLayout>
+            {loading && <LoadingScreen />}
             <ModalSelectOrganization
                 visible={isChangeCompany}
                 onClose={() => setIsChangeCompany(false)}
@@ -81,7 +90,7 @@ export const HomeScreen = () => {
                 </View>
                 <WrapIconButton onPress={onClickLogout} icon={<Notify />} />
             </View>
-            {vacancies.length > 0 && (
+            {vacancies?.length > 0 && (
                 <View width="100%" marginT-10 row centerV spread paddingB-15>
                     <SearchInput />
                     <View marginL-20>

@@ -41,6 +41,7 @@ export const CardStatusApply = ({ status }) => {
         <View
             br100
             paddingH-20
+            paddingV-5
             center
             style={{
                 backgroundColor: content.backgroundColor,

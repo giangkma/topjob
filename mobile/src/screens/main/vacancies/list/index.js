@@ -43,7 +43,7 @@ export const VacanciesScreen = ({ navigation }) => {
             } else {
                 setVacanciesDisplay(vacancies);
             }
-        }, [debouncedSearch]),
+        }, [debouncedSearch, vacancies]),
     );
 
     useFocusEffect(
@@ -53,7 +53,7 @@ export const VacanciesScreen = ({ navigation }) => {
                 vacancy => vacancy.status === activeTab.toLowerCase(),
             );
             setVacanciesDisplay(vacanciesFilter);
-        }, [activeTab]),
+        }, [activeTab, vacancies]),
     );
 
     return (

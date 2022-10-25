@@ -39,10 +39,15 @@ export const StyledSelectInput = ({
                     containerStyle={{
                         zIndex: 1000,
                     }}
+                    dropDownContainerStyle={{
+                        backgroundColor: '#dfdfdf',
+                        borderWidth: 0,
+                    }}
                     multiple={multiple}
                     mode="BADGE"
                     showBadgeDot={true}
                     placeholder={placeholder}
+                    dropDownDirection="TOP"
                 />
             </View>
             {error && (

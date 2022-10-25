@@ -18,7 +18,7 @@ import React, { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 
-const menu = ['Job Details', 'Requirements', 'benefits'];
+const menu = ['Job Details', 'Requirements', 'Benefits'];
 
 const initialVacancy = {
     position: null,

@@ -56,8 +56,11 @@ export const ModalSelectOrganization = ({ visible, onClose }) => {
                 iconClose
                 onClose={onClose}
                 cancelButton={{
-                    text: 'Create new',
-                    onPress: () => navigate('CreateOrganization'),
+                    text: 'Create New',
+                    onPress: () => {
+                        onClose();
+                        navigate('CreateOrganization');
+                    },
                 }}
                 loading={loading}
             >

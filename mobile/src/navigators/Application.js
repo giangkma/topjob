@@ -31,7 +31,7 @@ export const ApplicationNavigator = () => {
     useEffect(() => {
         SplashScreen.hide();
     });
-    const isNeedSetupProfile = !user?.role || !user?.organizations.length;
+    const isNeedSetupProfile = !user?.role || !user?.organizations?.length;
 
     return (
         <NavigationContainer ref={navigationRef}>

@@ -15,8 +15,9 @@ export const Layout = ({ children, bg2, isScroll, paddingTop, ...props }) => {
                     paddingTop !== undefined
                         ? paddingTop
                         : Platform.OS === 'ios'
-                        ? scaleSize(80)
+                        ? scaleSize(60)
                         : scaleSize(30),
+                marginBottom: Platform.OS === 'ios' ? scaleSize(10) : 0,
             }}
             {...props}
         >
