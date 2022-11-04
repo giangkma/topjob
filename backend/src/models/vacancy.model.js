@@ -6,6 +6,7 @@ const vacancySchema = new Schema({
   position: { type: String, trim: true, required: true },
   salary: { type: String, trim: true, required: true },
   location: { type: String, trim: true, required: true },
+  image: { type: String, trim: true },
   type: {
     type: String,
     default: TYPES_VACANCY.FULL_TIME,

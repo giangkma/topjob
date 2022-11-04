@@ -6,11 +6,12 @@ import { LoadingScreen, PrimaryButton } from 'components';
 import { useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Image, Text, TouchableOpacity, View } from 'react-native-ui-lib';
-import { useDispatch } from 'react-redux';
-import { postJobVacancyThunk } from 'store/auth';
-import { convertToSalary, cutString, scaleSize } from 'utilities';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOrganization, postJobVacancyThunk } from 'store/auth';
+import { convertToSalary, cutString, getInitials, scaleSize } from 'utilities';
 import React from 'react';
 import { navigate } from 'navigators/utils';
+import { useGetLogoVacancy } from 'hooks';
 
 const STATUS = {
     pending: 'PENDING',
@@ -22,6 +23,7 @@ export const Step4CreateVacancy = ({ vacancy, onResetFormVacancy }) => {
     const [status, setStatus] = useState(STATUS.pending);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+    const organization = useSelector(getOrganization);
 
     const onPostJobVacancy = async () => {
         try {
@@ -35,20 +37,37 @@ export const Step4CreateVacancy = ({ vacancy, onResetFormVacancy }) => {
             setLoading(false);
         }
     };
+
+    const imageVacancy = useGetLogoVacancy(vacancy);
+
     return (
         <View flex spread height="100%">
             {loading && <LoadingScreen />}
             <ScrollView>
                 <View flex-1 style={styles.container} row centerV bg-white br20>
                     <View>
-                        <Image source={images.mockImg} style={styles.image} />
+                        {imageVacancy ? (
+                            <Image source={imageVacancy} style={styles.image} />
+                        ) : (
+                            <View
+                                row
+                                centerH
+                                centerV
+                                br10
+                                style={styles.boxName}
+                            >
+                                <Text fs20>
+                                    {getInitials(vacancy.position)}
+                                </Text>
+                            </View>
+                        )}
                     </View>
                     <View marginL-15>
                         <Text black font-bold fs14>
                             {cutString(vacancy.position, 28)}
                         </Text>
                         <Text marginT-5 black fs12>
-                            Air BNB
+                            {organization && organization.name}
                         </Text>
                     </View>
                 </View>
@@ -210,6 +229,12 @@ const styles = StyleSheet.create({
         shadowColor: Colors.grey3,
     },
     image: {
+        width: scaleSize(55),
+        height: scaleSize(55),
+        borderRadius: 10,
+    },
+    boxName: {
+        backgroundColor: Colors.grey2,
         width: scaleSize(55),
         height: scaleSize(55),
     },

@@ -15,6 +15,8 @@ import { StyledTextInput } from 'screens';
 import React, { useState, useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { Config } from 'config';
+import { useGetLogoVacancy } from 'hooks';
+import { scaleSize } from 'utilities';
 
 export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
     const {
@@ -40,12 +42,14 @@ export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
 
     const isUpdate = !!vacancy._id;
 
+    const imageVacancy = useGetLogoVacancy(vacancy);
+
     return (
         <ScrollView style={{ maxHeight: '100%' }}>
-            {images.gameHint ? (
+            {imageVacancy ? (
                 <TouchableOpacity marginT-20 row center>
                     <View style={{ position: 'relative' }}>
-                        <Image source={images.gameHint} style={styles.logo} />
+                        <Image source={imageVacancy} style={styles.image} />
                         <View absB absR>
                             <EditCircle />
                         </View>
@@ -58,10 +62,11 @@ export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
                     br10
                     padding-20
                     bg-white
+                    marginT-15
                 >
                     <UploadCircle />
                     <Text marginL-10 grey fs13 marginT-10>
-                        Upload Company Logo
+                        Upload Vacancy Logo (optional)
                     </Text>
                 </TouchableOpacity>
             )}
@@ -95,7 +100,13 @@ export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
                         />
                     )}
                     name="salary"
-                    rules={{ required: 'Salary is required' }}
+                    rules={{
+                        required: 'Salary is required',
+                        pattern: {
+                            value: /^[0-9]*$/,
+                            message: 'Salary must be a number',
+                        },
+                    }}
                 />
             </View>
             <View marginT-10>
@@ -182,4 +193,10 @@ export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
     );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    image: {
+        width: scaleSize(100),
+        height: scaleSize(100),
+        borderRadius: 10,
+    },
+});

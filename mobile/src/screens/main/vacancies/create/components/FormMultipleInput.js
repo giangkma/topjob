@@ -64,6 +64,7 @@ export const FormMultipleInput = ({ onNextStep, title, data, isUpdate }) => {
 
     const onClickNext = () => {
         if (items.length === 0) {
+            showAlert('Please enter at least one item');
             return;
         }
         const isAllItemFilled = items.every(item => item.trim() !== '');

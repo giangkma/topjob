@@ -46,8 +46,8 @@ const sendEmail = async ({ to, subject, text, html, ...rest }) => {
   }
 };
 
-const headerHtmlMail = `<h1 style="color: #018c4c; font-size: 48px; border-bottom: solid 2px #ccc;padding-bottom: 10px">
-      Amonino App<br />
+const headerHtmlMail = `<h1 style="color: #018c4c; font-size: 32px; border-bottom: solid 2px #ccc;padding-bottom: 10px">
+      Find Job<br />
     </h1>`;
 const footerHtmlVerifyMail = `<h3 style="color: red">
         Chú ý: Không đưa mã này cho bất kỳ ai,
@@ -57,7 +57,7 @@ const footerHtmlVerifyMail = `<h3 style="color: red">
     <h1>Cảm ơn.</h1>`;
 
 // gửi mã xác nhận
-const htmlSignupAccount = (token) => {
+const htmlSignupAccount = token => {
   return `<div>
     ${headerHtmlMail}
     <h2 style="padding: 10px 0; margin-bottom: 10px;">
@@ -73,7 +73,7 @@ const htmlSignupAccount = (token) => {
 };
 
 // gửi mã đổi mật khẩu
-const htmlResetPassword = (token) => {
+const htmlResetPassword = token => {
   return `<div>
     ${headerHtmlMail}
     <h2 style="padding: 10px 0; margin-bottom: 10px;">
@@ -101,9 +101,17 @@ const htmlWarningLogin = () => {
   </div>`;
 };
 
+// mail nhận việc
+const htmlApplicant = message => {
+  return `<div>
+    ${message}
+  </div>`;
+};
+
 module.exports = {
   sendEmail,
   htmlSignupAccount,
   htmlResetPassword,
   htmlWarningLogin,
+  htmlApplicant,
 };

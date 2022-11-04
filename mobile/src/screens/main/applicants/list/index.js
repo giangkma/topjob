@@ -27,7 +27,7 @@ export const ApplicantListScreen = () => {
     const applies = useSelector(getApplies);
     const [activeTab, setActiveTab] = useState(menu[0]);
     const [search, setSearch] = useState('');
-
+    const [sortByScore, setSortByScore] = useState(false);
     const [appliesDisplay, setAppliesDisplay] = useState(applies);
     const debouncedSearch = useDebounce(search, 500);
 

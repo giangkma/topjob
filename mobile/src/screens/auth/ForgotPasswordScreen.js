@@ -26,7 +26,7 @@ export const ForgotPasswordScreen = () => {
         defaultValues: {},
     });
 
-    const [email, setEmail] = useState('giangdt.kma@gmail.com');
+    const [email, setEmail] = useState('');
     const [isSendCodeSuccess, setIsSendCodeSuccess] = useState(false);
     const [isResetSuccess, setResetSuccess] = useState(false);
     const [loading, setLoading] = useState(false);

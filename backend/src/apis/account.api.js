@@ -22,6 +22,12 @@ accountApi.put(
   passportConfig.jwtAuthentication,
   accountController.putUpdateAvt,
 );
+accountApi.post(
+  '/upload-img',
+  passportConfig.jwtAuthentication,
+  accountController.uploadPicture,
+);
+
 accountApi.put(
   '/update-profile',
   passportConfig.jwtAuthentication,

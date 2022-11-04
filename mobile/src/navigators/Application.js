@@ -18,6 +18,7 @@ import {
     ApplicantDetailScreen,
     ApplicantListScreen,
     CreateProfileScreen,
+    ResumeScreen,
 } from 'screens/main';
 import { navigationRef } from './utils';
 import { StartupScreen } from 'screens/startup/StartupScreen';
@@ -68,6 +69,10 @@ export const ApplicationNavigator = () => {
                             <Stack.Screen
                                 name="CreateOrganization"
                                 component={CreateProfileScreen}
+                            />
+                            <Stack.Screen
+                                name="SeeResume"
+                                component={ResumeScreen}
                             />
                             <Stack.Screen
                                 name="MainTabs"

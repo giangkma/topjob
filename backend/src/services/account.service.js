@@ -3,13 +3,14 @@ const { hashPassword } = require('../helper');
 const AccountModel = require('../models/account.model');
 const UserModel = require('../models/user.model');
 const { uploadImage } = require('./common.service');
+const uuidService = require('./uuid.service');
 
 exports.isExistAccount = email => {
   return AccountModel.exists({ email });
 };
 
-exports.findAccount = email => {
-  return AccountModel.findOne({ email });
+exports.findAccount = data => {
+  return AccountModel.findOne(data);
 };
 
 exports.createAccount = (
@@ -32,25 +33,20 @@ exports.createUser = (accountId, name) => {
 };
 
 exports.updatePassword = async (email = '', newPassword = '') => {
-  try {
-    const hashPw = await hashPassword(newPassword);
+  const hashPw = await hashPassword(newPassword);
+  const account = await this.findAccount({ email });
+  if (!account) throw new Error('Account does not exist');
 
-    const res = await AccountModel.updateOne({ email }, { password: hashPw });
+  await AccountModel.updateOne({ email }, { password: hashPw });
+  await uuidService.updatePassword(account.uuid, newPassword);
 
-    if (res.ok) {
-      return true;
-    }
-
-    return false;
-  } catch (error) {
-    throw error;
-  }
+  return true;
 };
 
-exports.updateAvt = async (username = '', avtSrc = '') => {
+exports.updateAvt = async (_id = '', avtSrc = '') => {
   try {
     const picture = await uploadImage(avtSrc, 'amonino/user-avt');
-    const isUpdated = await UserModel.updateOne({ username }, { avt: picture });
+    const isUpdated = await UserModel.updateOne({ _id }, { avatar: picture });
     if (isUpdated.n && isUpdated.ok) return picture;
 
     return false;

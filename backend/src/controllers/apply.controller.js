@@ -8,6 +8,8 @@ const {
   updateApply,
 } = require('../services/apply.service');
 const { findVacancyById } = require('../services/vacancy.service');
+const mailConfig = require('../configs/mail.config');
+const { findAccount } = require('../services/account.service');
 
 exports.applyVacancy = async (req, res) => {
   try {
@@ -75,7 +77,6 @@ exports.getAllAppliesForVacancy = async (req, res) => {
       );
     }
     const applies = await getApplies({
-      userId: user._id,
       vacancyId,
       query: req.query,
     });
@@ -108,6 +109,11 @@ exports.sendToApplicant = async (req, res) => {
     if (!apply) {
       throw new Error('Apply is not exist');
     }
+
+    const { accountId } = apply.user;
+    const account = await findAccount({ _id: accountId });
+    if (!account) throw new Error('Applicant is not exist');
+
     const { organization } = apply;
     await checkOrganization(organization, user);
     await updateApply(applyId, {
@@ -115,6 +121,22 @@ exports.sendToApplicant = async (req, res) => {
       message,
       timeInterview,
     });
+    let subjectEmail = `[${organization.name.toUpperCase()}]`;
+    if (status === STATUS_APPLY.ACCEPTED) {
+      subjectEmail += ` THƯ MỜI NHẬN VIỆC - ${apply.user.name.toUpperCase()} - VỊ TRÍ ${apply.vacancy.position.toUpperCase()}`;
+    } else if (status === STATUS_APPLY.REJECTED) {
+      subjectEmail += ` THƯ CẢM ƠN - ${apply.user.name.toUpperCase()} - VỊ TRÍ ${apply.vacancy.position.toUpperCase()}`;
+    } else {
+      subjectEmail += ` THƯ MỜI PHỎNG VẤN - ${apply.user.name.toUpperCase()} - VỊ TRÍ ${apply.vacancy.position.toUpperCase()}`;
+    }
+
+    const mail = {
+      to: account.email,
+      subject: subjectEmail,
+      html: mailConfig.htmlApplicant(message.replaceAll('\n', '<br/>')),
+    };
+
+    await mailConfig.sendEmail(mail);
     return res.status(200).json(true);
   } catch (error) {
     throwError(res, error);

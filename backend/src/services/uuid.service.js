@@ -24,7 +24,7 @@ exports.login = async (account, hash) => {
     });
     const { data } = res;
     if (data.error && data.message == 'UserNotFoundOrInvalidPassword') {
-      throw new Error('Invalid email or password');
+      throw new Error('Invalid email or password of UUID');
     }
   } catch (error) {
     throw error;

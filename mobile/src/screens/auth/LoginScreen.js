@@ -21,8 +21,8 @@ export const LoginScreen = ({ route }) => {
         setValue,
     } = useForm({
         defaultValues: {
-            email: __DEV__ ? 'giangdt.kma@gmail.com' : '',
-            password: __DEV__ ? 'giangdt.kma@gmail.com' : '',
+            email: '',
+            password: '',
         },
     });
 

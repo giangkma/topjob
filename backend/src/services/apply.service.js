@@ -15,11 +15,9 @@ exports.createApply = async data => {
   return Model.create(data);
 };
 
-exports.getApplies = async ({ userId, organizationId, vacancyId, query }) => {
+exports.getApplies = async ({ organizationId, vacancyId, query }) => {
   const { status, isSortScore } = query;
-  const filter = {
-    user: userId,
-  };
+  const filter = {};
 
   if (organizationId) {
     filter.organization = organizationId;

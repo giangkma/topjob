@@ -19,6 +19,10 @@ import { useDispatch } from 'react-redux';
 import { Layout, LoadingScreen, StyledTextInput } from 'screens';
 import { onLogout } from 'store/auth';
 import { ModalSelectOrganization } from 'screens/main/components';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { useMemo } from 'react';
+import axios from 'axios';
+import { getBase64String } from 'react-native-image-base64';
 
 export const ProfileForm = ({
     enableLogOut,
@@ -31,6 +35,30 @@ export const ProfileForm = ({
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const [isChangeCompany, setIsChangeCompany] = useState(false);
+    const [file, setFile] = useState();
+
+    const chooseImage = () => {
+        let options = {
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        launchImageLibrary(options, response => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log(
+                    'User tapped custom button: ',
+                    response.customButton,
+                );
+            } else {
+                setFile(response.assets[0]);
+            }
+        });
+    };
 
     const {
         handleSubmit,
@@ -51,6 +79,30 @@ export const ProfileForm = ({
             reset(organization);
         }
     }, [organization]);
+
+    const renderLogoUrl = () => {
+        if (file && file.uri) {
+            return { uri: file.uri };
+        } else if (organization && organization.logo)
+            return { uri: organization.logo };
+    };
+
+    const uploadImg = async () => {
+        if (!file) return;
+        try {
+            setLoading(true);
+            let base64 = await getBase64String(file.uri);
+            console.log(base64);
+            const res = await accountApi.putUpdateAvt(base64);
+            console.log(res);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const logo = renderLogoUrl();
 
     return (
         <Layout {...props}>
@@ -89,13 +141,15 @@ export const ProfileForm = ({
                 )}
             </View>
             <ScrollView style={{ maxHeight: '100%' }}>
-                {images.gameHint ? (
-                    <TouchableOpacity marginT-20 row center>
+                {logo ? (
+                    <TouchableOpacity
+                        marginT-20
+                        row
+                        center
+                        onPress={chooseImage}
+                    >
                         <View style={{ position: 'relative' }}>
-                            <Image
-                                source={images.gameHint}
-                                style={styles.logo}
-                            />
+                            <Image source={logo} style={styles.logo} />
                             <View absB absR>
                                 <EditCircle />
                             </View>
@@ -197,5 +251,7 @@ const styles = StyleSheet.create({
         width: 90,
         height: 90,
         resizeMode: 'contain',
+        borderRadius: 999,
+        objectFit: 'cover',
     },
 });

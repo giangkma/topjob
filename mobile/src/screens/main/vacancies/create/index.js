@@ -144,7 +144,6 @@ export const CreateVacancyScreen = ({ navigation, route }) => {
                         </TouchableOpacity>
                     )
                 }
-                navigateTo="Vacancies"
             />
 
             {currentStep !== 4 && (

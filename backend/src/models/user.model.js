@@ -17,6 +17,8 @@ const userSchema = new Schema({
       ref: 'organization',
     },
   ],
+  resume: { type: String, trim: true },
+  createdAt: { type: Date, default: Date.now },
 });
 
 const UserModel = mongoose.model('user', userSchema, 'users');

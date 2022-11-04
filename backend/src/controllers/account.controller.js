@@ -27,6 +27,7 @@ const {
   removeVerifyCode,
 } = require('../services/common.service');
 const uuidService = require('../services/uuid.service');
+const { cloudinary } = require('../configs/cloudinary.config');
 
 exports.postRegisterAccount = async (req, res) => {
   try {
@@ -73,7 +74,7 @@ exports.postLogin = async (req, res) => {
     await uuidService.login(email, password);
 
     // check account existence
-    const account = await findAccount(email);
+    const account = await findAccount({ email });
     if (!account) {
       throw new Error('Account does not exist');
     }
@@ -107,7 +108,7 @@ exports.postLoginSocialNetwork = async (req, res) => {
     }
 
     const { email, name, avt, id, type } = user;
-    const account = await findAccount(email);
+    const account = await findAccount({ email });
     let accountId = null;
 
     // If not exist then create a new account
@@ -163,16 +164,40 @@ exports.postResetPassword = async (req, res) => {
 exports.putUpdateAvt = async (req, res, next) => {
   try {
     const { user } = req;
+    console.log(req.body);
     const { avtSrc } = req.body;
     if (!Boolean(avtSrc) || !Boolean(user)) {
       throw new Error('Update failed');
     }
-    const update = await updateAvt(user.username, avtSrc);
+    const update = await updateAvt(user._id, avtSrc);
     if (!update) {
       throw new Error('Update failed');
     }
 
     return res.status(200).json({ newSrc: update });
+  } catch (error) {
+    throwError(res, error);
+  }
+};
+
+exports.uploadPicture = async (req, res) => {
+  try {
+    // upload image
+    console.log(req);
+    const fileStr = req.body.data;
+    const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+      upload_preset: 'amonino',
+    });
+    // cloudinary.uploader.upload(file.tempFilePath, (err, result) => {
+    //   return res.status(200).json({
+    //     success: true,
+    //     file: {
+    //       width: result.width,
+    //       height: result.height,
+    //       url: result.url,
+    //     },
+    //   });
+    // });
   } catch (error) {
     throwError(res, error);
   }

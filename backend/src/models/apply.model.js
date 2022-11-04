@@ -26,7 +26,6 @@ const applySchema = new Schema({
   ],
   message: {
     type: String,
-    trim: true,
   },
   timeInterview: {
     type: Date,

@@ -5,12 +5,13 @@ import {
     SearchInput,
     WrapIconButton,
 } from 'components';
+import { Config } from 'config';
 import { useAuth } from 'hooks';
 import { navigate } from 'navigators/utils';
-import { ScrollView, StyleSheet } from 'react-native';
-import { Text, View, TouchableOpacity, Image } from 'react-native-ui-lib';
+import { useEffect, useMemo, useState } from 'react';
+import { ScrollView } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native-ui-lib';
 import { useDispatch, useSelector } from 'react-redux';
-import { Layout } from 'screens';
 import {
     fetchAppliesThunk,
     fetchVacanciesThunk,
@@ -21,15 +22,13 @@ import {
 } from 'store/auth';
 import { showAlert } from 'utilities';
 import {
-    CardVacancy,
     CardApplicant,
-    ModalSelectOrganization,
-    MainTabsLayout,
+    CardVacancy,
     EmptyVacancies,
+    MainTabsLayout,
+    ModalSelectOrganization,
 } from '../components';
-import React, { useEffect, useMemo } from 'react';
-import { Config } from 'config';
-import { useState } from 'react';
+import React from 'react';
 
 export const HomeScreen = () => {
     const [loading, setLoading] = useState(false);
@@ -88,7 +87,11 @@ export const HomeScreen = () => {
                         <ArrowDown />
                     </TouchableOpacity>
                 </View>
-                <WrapIconButton onPress={onClickLogout} icon={<Notify />} />
+                <TouchableOpacity onPress={getInit}>
+                    <Text primary fs13>
+                        Reload
+                    </Text>
+                </TouchableOpacity>
             </View>
             {vacancies?.length > 0 && (
                 <View width="100%" marginT-10 row centerV spread paddingB-15>

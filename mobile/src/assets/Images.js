@@ -15,6 +15,7 @@ const images = {
     gameSpeaker: require('./images/game-speaker.png'),
     speakingMan: require('./images/speaking-man.png'),
     gameHint: require('./images/game-hint.png'),
+    noAvatar: require('./images/noAvatar.png'),
 };
 
 const icons = {

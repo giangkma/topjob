@@ -10,7 +10,7 @@ import React from 'react';
 import { useState } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Image, Text, TouchableOpacity, View } from 'react-native-ui-lib';
-import { cutString, scaleSize, showAlert } from 'utilities';
+import { cutString, getInitials, scaleSize, showAlert } from 'utilities';
 import Textarea from 'react-native-textarea';
 import { Config } from 'config';
 import { Controller, useForm } from 'react-hook-form';
@@ -19,6 +19,7 @@ import { ReviewRequirements } from '../components';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { sendToApplicantThunk } from 'store/auth';
+import { navigate } from 'navigators/utils';
 
 // convert date to DD/MM/YYYY
 const convertDateToStringDay = date => {
@@ -71,6 +72,7 @@ export const ApplicantDetailScreen = ({ route }) => {
             }
             setLoading(true);
             await dispatch(sendToApplicantThunk(applicant._id, data));
+            showAlert('Send to applicant successfully', 'Success');
         } catch (error) {
             showAlert(error.message);
         } finally {
@@ -94,147 +96,206 @@ export const ApplicantDetailScreen = ({ route }) => {
             {loading && <LoadingScreen />}
             <BackPageButton text="Applicants" />
             <View flex spread>
-                <View style={styles.container} bg-white br20 marginB-20>
-                    <View row centerV>
-                        <View>
-                            <Image
-                                source={Images.mockImg}
-                                style={styles.image}
-                            />
-                        </View>
-                        <View flex-1 marginL-10>
-                            <Text black font-bold fs14>
-                                {cutString(applicant?.user.name, 18)}
-                            </Text>
-                            <Text black fs12 marginT-5>
-                                {cutString(applicant?.vacancy.position, 18)}
-                            </Text>
-                        </View>
-                    </View>
-                    <View style={styles.divider} bg-grey2 marginT-15 />
-                    <View row spread marginT-15>
-                        <View flex-1 marginR-20>
-                            <PrimaryButton text="See Resume" small />
-                        </View>
-                        <View flex-1>
-                            <PrimaryButton
-                                onPress={() => setIsReview(p => !p)}
-                                text={isReview ? 'See Details' : 'See Review'}
-                                border
-                                small
-                            />
-                        </View>
-                    </View>
-                    <View style={styles.divider} bg-grey2 marginT-15 />
-                    {isReview ? (
-                        <ReviewRequirements applicant={applicant} />
-                    ) : (
-                        <>
-                            <Text fs13 marginV-15>
-                                Message
-                            </Text>
-                            <Controller
-                                control={control}
-                                render={({ field: { onChange, value } }) => (
-                                    <Textarea
-                                        containerStyle={
-                                            styles.textareaContainer
-                                        }
-                                        style={styles.textarea}
-                                        onChangeText={onChange}
-                                        placeholder={'Enter something...'}
-                                        placeholderTextColor={Colors.grey}
-                                        value={value}
-                                    />
+                {applicant && (
+                    <ScrollView>
+                        <View style={styles.container} bg-white br20 marginB-20>
+                            <View row centerV>
+                                <View>
+                                    {applicant.user.avatar ? (
+                                        <Image
+                                            source={{
+                                                uri: applicant.user.avatar,
+                                            }}
+                                            style={styles.image}
+                                        />
+                                    ) : (
+                                        <View
+                                            row
+                                            centerH
+                                            centerV
+                                            br100
+                                            style={styles.boxName}
+                                        >
+                                            <Text fs20>
+                                                {getInitials(
+                                                    applicant.user.name,
+                                                )}
+                                            </Text>
+                                        </View>
+                                    )}
+                                </View>
+                                <View flex-1 marginL-10>
+                                    <Text black font-bold fs14>
+                                        {cutString(applicant.user.name, 18)}
+                                    </Text>
+                                    <Text black fs12 marginT-5>
+                                        {cutString(
+                                            applicant.vacancy.position,
+                                            18,
+                                        )}
+                                    </Text>
+                                </View>
+                            </View>
+                            <View style={styles.divider} bg-grey2 marginT-15 />
+                            <View row spread marginT-15>
+                                {applicant.user.resume && (
+                                    <View flex-1 marginR-20>
+                                        <PrimaryButton
+                                            text="See Resume"
+                                            small
+                                            onPress={() =>
+                                                navigate('SeeResume', {
+                                                    uri: applicant.user.resume,
+                                                })
+                                            }
+                                        />
+                                    </View>
                                 )}
-                                name="message"
-                            />
-                            {status === Config.APPLY_STATUS.INTERVIEW && (
-                                <View row spread marginT-15>
-                                    <TouchableOpacity
-                                        onPress={() => setOpenDatePicker(true)}
-                                        flex-1
-                                        centerH
-                                        centerV
-                                        br100
-                                        marginR-20
-                                        style={{
-                                            borderWidth: 1.5,
-                                            borderColor: Colors.grey2,
-                                            height: scaleSize(40),
-                                        }}
-                                    >
-                                        <Text fw6 fs14 primary>
-                                            {convertDateToStringDay(date)}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        onPress={() => setOpenDatePicker(true)}
-                                        flex-1
-                                        centerH
-                                        centerV
-                                        br100
-                                        style={{
-                                            borderWidth: 1.5,
-                                            borderColor: Colors.grey2,
-                                            height: scaleSize(40),
-                                        }}
-                                    >
-                                        <Text fw6 fs14 primary>
-                                            {convertDateToStringTime(date)}
-                                        </Text>
-                                    </TouchableOpacity>
-                                    <DatePicker
-                                        modal
-                                        open={openDatePicker}
-                                        date={date}
-                                        onConfirm={date => {
-                                            setOpenDatePicker(false);
-                                            setDate(date);
-                                        }}
-                                        onCancel={() => {
-                                            setOpenDatePicker(false);
-                                        }}
+                                <View flex-1>
+                                    <PrimaryButton
+                                        onPress={() => setIsReview(p => !p)}
+                                        text={
+                                            isReview
+                                                ? 'See Details'
+                                                : 'See Review'
+                                        }
+                                        border
+                                        small
                                     />
                                 </View>
-                            )}
-                            <Controller
-                                control={control}
-                                render={({ field: { onChange, value } }) => (
-                                    <StyledSelectInput
-                                        items={[
-                                            {
-                                                label: 'Rejected',
-                                                value: Config.APPLY_STATUS
-                                                    .REJECTED,
-                                            },
-                                            {
-                                                label: 'Schedule to Interview',
-                                                value: Config.APPLY_STATUS
-                                                    .INTERVIEW,
-                                            },
-                                            {
-                                                label: 'Accepted',
-                                                value: Config.APPLY_STATUS
-                                                    .ACCEPTED,
-                                            },
-                                        ]}
-                                        placeholder="Mark Status as"
-                                        value={value}
-                                        onChange={onChange}
+                            </View>
+                            <View style={styles.divider} bg-grey2 marginT-15 />
+                            {isReview ? (
+                                <ReviewRequirements applicant={applicant} />
+                            ) : (
+                                <>
+                                    <Text fs13 marginV-15>
+                                        Message
+                                    </Text>
+                                    <Controller
+                                        control={control}
+                                        render={({
+                                            field: { onChange, value },
+                                        }) => (
+                                            <Textarea
+                                                containerStyle={
+                                                    styles.textareaContainer
+                                                }
+                                                style={styles.textarea}
+                                                onChangeText={onChange}
+                                                placeholder={
+                                                    'Enter something...'
+                                                }
+                                                placeholderTextColor={
+                                                    Colors.grey
+                                                }
+                                                value={value}
+                                            />
+                                        )}
+                                        name="message"
                                     />
-                                )}
-                                name="status"
+                                    {status ===
+                                        Config.APPLY_STATUS.INTERVIEW && (
+                                        <View row spread marginT-15>
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    setOpenDatePicker(true)
+                                                }
+                                                flex-1
+                                                centerH
+                                                centerV
+                                                br100
+                                                marginR-20
+                                                style={{
+                                                    borderWidth: 1.5,
+                                                    borderColor: Colors.grey2,
+                                                    height: scaleSize(40),
+                                                }}
+                                            >
+                                                <Text fw6 fs14 primary>
+                                                    {convertDateToStringDay(
+                                                        date,
+                                                    )}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity
+                                                onPress={() =>
+                                                    setOpenDatePicker(true)
+                                                }
+                                                flex-1
+                                                centerH
+                                                centerV
+                                                br100
+                                                style={{
+                                                    borderWidth: 1.5,
+                                                    borderColor: Colors.grey2,
+                                                    height: scaleSize(40),
+                                                }}
+                                            >
+                                                <Text fw6 fs14 primary>
+                                                    {convertDateToStringTime(
+                                                        date,
+                                                    )}
+                                                </Text>
+                                            </TouchableOpacity>
+                                            <DatePicker
+                                                modal
+                                                open={openDatePicker}
+                                                date={date}
+                                                onConfirm={date => {
+                                                    setOpenDatePicker(false);
+                                                    setDate(date);
+                                                }}
+                                                onCancel={() => {
+                                                    setOpenDatePicker(false);
+                                                }}
+                                            />
+                                        </View>
+                                    )}
+                                    <Controller
+                                        control={control}
+                                        render={({
+                                            field: { onChange, value },
+                                        }) => (
+                                            <StyledSelectInput
+                                                items={[
+                                                    {
+                                                        label: 'Rejected',
+                                                        value: Config
+                                                            .APPLY_STATUS
+                                                            .REJECTED,
+                                                    },
+                                                    {
+                                                        label: 'Schedule to Interview',
+                                                        value: Config
+                                                            .APPLY_STATUS
+                                                            .INTERVIEW,
+                                                    },
+                                                    {
+                                                        label: 'Accepted',
+                                                        value: Config
+                                                            .APPLY_STATUS
+                                                            .ACCEPTED,
+                                                    },
+                                                ]}
+                                                placeholder="Mark Status as"
+                                                value={value}
+                                                onChange={onChange}
+                                            />
+                                        )}
+                                        name="status"
+                                    />
+                                </>
+                            )}
+                        </View>
+                        {!isReview && (
+                            <PrimaryButton
+                                disabled={!status}
+                                onPress={handleSubmit(onSubmit)}
+                                text="Send to Applicant"
                             />
-                        </>
-                    )}
-                </View>
-                {!isReview && (
-                    <PrimaryButton
-                        disabled={!status}
-                        onPress={handleSubmit(onSubmit)}
-                        text="Send to Applicant"
-                    />
+                        )}
+                    </ScrollView>
                 )}
             </View>
         </Layout>
@@ -251,6 +312,11 @@ const styles = StyleSheet.create({
         width: scaleSize(55),
         height: scaleSize(55),
         borderRadius: 100,
+    },
+    boxName: {
+        backgroundColor: Colors.grey2,
+        width: scaleSize(55),
+        height: scaleSize(55),
     },
     divider: {
         height: 1,
