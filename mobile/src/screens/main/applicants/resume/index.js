@@ -9,6 +9,7 @@ export const ResumeScreen = ({ navigation, route }) => {
     if (!uri) return navigation.goBack();
     return (
         <>
+            <View style={{ backgroundColor: Colors.black, height: 50 }}></View>
             <WebView
                 source={{
                     uri,
@@ -21,6 +22,7 @@ export const ResumeScreen = ({ navigation, route }) => {
                 paddingV-10
                 onPress={() => navigation.goBack()}
                 style={{ backgroundColor: Colors.aliceBlue }}
+                paddingB-40
             >
                 <ArrowLeft width={18} />
                 <Text fs14 marginL-8>

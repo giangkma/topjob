@@ -133,7 +133,7 @@ exports.sendToApplicant = async (req, res) => {
     const mail = {
       to: account.email,
       subject: subjectEmail,
-      html: mailConfig.htmlApplicant(message.replaceAll('\n', '<br/>')),
+      html: mailConfig.htmlApplicant(message.replace('\n', '<br/>')),
     };
 
     await mailConfig.sendEmail(mail);

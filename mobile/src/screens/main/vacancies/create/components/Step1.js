@@ -12,11 +12,12 @@ import {
     View,
 } from 'react-native-ui-lib';
 import { StyledTextInput } from 'screens';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { Config } from 'config';
 import { useGetLogoVacancy } from 'hooks';
 import { scaleSize } from 'utilities';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
     const {
@@ -27,7 +28,30 @@ export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
     } = useForm({
         defaultValues: vacancy,
     });
+    const [file, setFile] = useState();
 
+    const chooseImage = () => {
+        let options = {
+            storageOptions: {
+                skipBackup: true,
+                path: 'images',
+            },
+        };
+        launchImageLibrary(options, response => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log(
+                    'User tapped custom button: ',
+                    response.customButton,
+                );
+            } else {
+                setFile(response.assets[0]);
+            }
+        });
+    };
     useFocusEffect(
         useCallback(() => {
             if (vacancy) {
@@ -39,6 +63,7 @@ export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
     const onSubmit = value => {
         onNextStep(value);
     };
+    if (file) vacancy.image = file.uri;
 
     const isUpdate = !!vacancy._id;
 
@@ -47,7 +72,7 @@ export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
     return (
         <ScrollView style={{ maxHeight: '100%' }}>
             {imageVacancy ? (
-                <TouchableOpacity marginT-20 row center>
+                <TouchableOpacity onPress={chooseImage} marginT-20 row center>
                     <View style={{ position: 'relative' }}>
                         <Image source={imageVacancy} style={styles.image} />
                         <View absB absR>
@@ -63,6 +88,7 @@ export const Step1CreateVacancy = ({ onNextStep, vacancy }) => {
                     padding-20
                     bg-white
                     marginT-15
+                    onPress={chooseImage}
                 >
                     <UploadCircle />
                     <Text marginL-10 grey fs13 marginT-10>

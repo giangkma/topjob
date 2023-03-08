@@ -162,6 +162,7 @@ export const ProfileForm = ({
                         br10
                         padding-20
                         bg-white
+                        onPress={chooseImage}
                     >
                         <UploadCircle />
                         <Text marginL-10 grey fs13 marginT-10>

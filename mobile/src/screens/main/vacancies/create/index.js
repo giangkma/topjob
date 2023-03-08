@@ -28,6 +28,7 @@ const initialVacancy = {
     requirements: [],
     benefits: [],
     status: Config.VACANCY_STATUS.ACTIVE,
+    image: null,
 };
 
 export const CreateVacancyScreen = ({ navigation, route }) => {
@@ -88,6 +89,12 @@ export const CreateVacancyScreen = ({ navigation, route }) => {
         }
     };
 
+    useEffect(() => {
+        return () => {
+            onResetFormVacancy();
+        };
+    }, []);
+
     const renderStep = () => {
         switch (currentStep) {
             case 2: // requirements
@@ -135,6 +142,7 @@ export const CreateVacancyScreen = ({ navigation, route }) => {
             <BackPageButton
                 text={isUpdate ? 'Vacancies' : 'Create Vacancies'}
                 onPress={onPrevStep}
+                navigateTo="Home"
                 elementRight={
                     isUpdate && (
                         <TouchableOpacity onPress={onRemove}>
